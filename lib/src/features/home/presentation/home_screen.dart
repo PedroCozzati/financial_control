@@ -1,8 +1,7 @@
+import 'package:financial_control/src/features/widgets/app_bar/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 
 import '../../../common/colors/colors.dart';
-import '../../app_bar/custom_app_bar.dart';
-import '../../bottom_navigation_bar/bottom_navigation_bar.widget.dart';
 import '../home_carousel/home_carousel_main.dart';
 
 class HomeScreen extends StatefulWidget {

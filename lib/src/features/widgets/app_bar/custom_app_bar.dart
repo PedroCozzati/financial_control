@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../common/colors/colors.dart';
+import '../../../common/colors/colors.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   CustomAppBar({Key? key})
@@ -28,15 +28,32 @@ class _CustomAppBarState extends State {
       color: CustomColors.primaryBlue,
       child: Column(
         children: [
-          SizedBox(height: 50,),
+          SizedBox(
+            height: 50,
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Boa noite!',style: TextStyle(color: CustomColors.primaryWhite,fontSize: 24),textAlign: TextAlign.end,),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text(
+                    'Boa noite!',
+                    style: TextStyle(
+                      color: CustomColors.primaryWhite,
+                      fontSize: 20,
+                    ),
+                    textAlign: TextAlign.end,
+                  ),
+                ),
                 IconButton(
-                  icon: Icon(Icons.info,color: CustomColors.thirdBlue,size: 40,),
+                  icon: Icon(
+                    Icons.info,
+                    color: CustomColors.thirdBlue,
+                    size: 40,
+                  ),
                   onPressed: () {},
                 ),
               ],

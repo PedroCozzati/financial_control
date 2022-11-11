@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../../../common/colors/colors.dart';
+import '../../widgets/custom_text/custom_text.dart';
+import 'package:path_provider/path_provider.dart';
 
 class HomeCarouselOne extends StatefulWidget {
   const HomeCarouselOne({Key? key}) : super(key: key);
@@ -10,6 +14,56 @@ class HomeCarouselOne extends StatefulWidget {
 }
 
 class _HomeCarouselOneState extends State<HomeCarouselOne> {
+
+  late String data;
+
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    print(directory.path);
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/counter.txt');
+  }
+
+  Future<String> readContent() async {
+    try {
+      final file = await _localFile;
+      // Read the file
+      String contents = await file.readAsString();
+      // Returning the contents of the file
+      return contents;
+    } catch (e) {
+      // If encountering an error, return
+      return 'Error!';
+    }
+  }
+
+  Future<File> writeContent() async {
+    final file = await _localFile;
+    // Write the file
+    return file.writeAsString('R\$299,99');
+  }
+
+  Future<File> writeData(String data) async {
+    final file = await _localFile;
+    // Write the file
+    return file.writeAsString(data);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    writeContent();
+    readContent().then((String value) {
+      setState(() {
+        data = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -24,7 +78,13 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Saldo Atual"),
+                CustomText(
+                  fontSize: 18,
+                  text: 'Saldo Atual',
+                  color: CustomColors.primaryWhite,
+                  fontWeight: null,
+                ),
+
                 Row(
                   children: [
                     Text("Mês"),
@@ -37,7 +97,7 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
                 ),
               ],
             ),
-            Text("R\$ 30,00"),
+            Text(data),
             Text("Gastos"),
             Text("R\$ 300,00"),
             Container(
