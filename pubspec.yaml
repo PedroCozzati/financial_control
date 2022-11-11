@@ -44,6 +44,7 @@ dependencies:
   fl_chart: ^0.45.0
   jiffy: ^5.0.0
   intl:
+  path_provider:
 
 dev_dependencies:
   flutter_test:
