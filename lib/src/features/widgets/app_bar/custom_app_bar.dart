@@ -25,7 +25,13 @@ class _CustomAppBarState extends State {
       // ),
       // title: Text('Boa noite!'),
       height: 130,
-      color: CustomColors.primaryBlue,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(bottom: BorderSide(
+          color: CustomColors.thirdRed,
+          width: 3
+        ))
+      ),
       child: Column(
         children: [
           SizedBox(
@@ -42,8 +48,8 @@ class _CustomAppBarState extends State {
                   child: Text(
                     'Boa noite!',
                     style: TextStyle(
-                      color: CustomColors.primaryWhite,
-                      fontSize: 20,
+                      color: Colors.black,
+                      fontSize: 26,
                     ),
                     textAlign: TextAlign.end,
                   ),
@@ -51,7 +57,7 @@ class _CustomAppBarState extends State {
                 IconButton(
                   icon: Icon(
                     Icons.info,
-                    color: CustomColors.thirdBlue,
+                    color: CustomColors.primayRed,
                     size: 40,
                   ),
                   onPressed: () {},

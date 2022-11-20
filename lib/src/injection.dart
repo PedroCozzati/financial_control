@@ -13,13 +13,13 @@ import 'features/feature_default/presentation/controllers/coffee.bloc.dart';
 final getIt = GetIt.instance;
 
 Future<void> init() async {
-  getIt.registerLazySingleton<ICoffeeDataSource>(
-        () => CoffeeDatasourceImpl(),
-  );
-  getIt.registerLazySingleton<ICoffeeRepository>(
-        () => CoffeeRepositoryImp(
-        coffeeDatasource: getIt.get<ICoffeeDataSource>()),
-  );
+  // getIt.registerLazySingleton<ICoffeeDataSource>(
+  //       () => CoffeeDatasourceImpl(),
+  // );
+  // getIt.registerLazySingleton<ICoffeeRepository>(
+  //       () => CoffeeRepositoryImp(
+  //       coffeeDatasource: getIt.get<ICoffeeDataSource>()),
+  // );
   getIt.registerLazySingleton<ICoffeeUseCase>(
         () => CoffeeUseCase(getIt.get<ICoffeeRepository>()),
   );

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 
 class CustomColors{
-  static Color primaryBlue = Color(0xff24293E);
-  static Color secondaryBlue = Color(0xff3D466F);
-  static Color thirdBlue = Color(0xff8EBBFF);
   static Color primaryWhite = Color(0xffF4F5FC);
-  static Color primaryGreen = Color(0xff8FF2AB);
+  static Color primayRed = Color(0xff980128);
+  static Color secundaryRed = Color(0xffe02b55);
+  static Color thirdRed = Color(0x73910528);
+  static Color fourthRed = Color(0xA910528);
+  static Color primaryOrange = Color(0xffe0822b);
+  static Color primaryYellow = Color(0xffc7b864);
+  static Color primaryGreen = Color(0xff8dc764);
+  static Color primaryBlueGreen = Color(0xff64c78f);
+  static Color primaryBlue = Color(0xff64c2c7);
+  static Color primaryDarkBlue = Color(0xff647dc7);
 }

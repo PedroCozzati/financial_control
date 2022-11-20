@@ -1,3 +1,4 @@
+import 'package:financial_control/src/common/colors/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'home_carousel_one.dart';
 import 'home_carousel_three.dart';
 import 'home_carousel_two.dart';
+
 class HomeCarouselMain extends StatefulWidget {
   const HomeCarouselMain({Key? key}) : super(key: key);
   @override
@@ -49,7 +51,7 @@ class _HomeCarouselMainState extends State<HomeCarouselMain> {
             right: 0,
             height: 40,
             child: Container(
-              color: Colors.black12,
+              color: Color(0x204E0202),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List<Widget>.generate(
@@ -67,8 +69,8 @@ class _HomeCarouselMainState extends State<HomeCarouselMain> {
                           // check if a dot is connected to the current page
                           // if true, give it a different color
                           backgroundColor: _activePage == index
-                              ? Colors.greenAccent
-                              : Colors.white30,
+                              ? CustomColors.primayRed
+                              : Color(0xffffffff),
                         ),
                       ),
                     )),

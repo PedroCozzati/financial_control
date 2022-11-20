@@ -1,10 +1,11 @@
-import 'dart:io';
 
+
+import 'package:financial_control/src/common/database/database_controller.dart';
 import 'package:flutter/material.dart';
 
-import '../../../common/colors/colors.dart';
-import '../../widgets/custom_text/custom_text.dart';
-import 'package:path_provider/path_provider.dart';
+
+import '../../../../common/colors/colors.dart';
+import '../../../widgets/custom_text/custom_text.dart';
 
 class HomeCarouselOne extends StatefulWidget {
   const HomeCarouselOne({Key? key}) : super(key: key);
@@ -15,53 +16,15 @@ class HomeCarouselOne extends StatefulWidget {
 
 class _HomeCarouselOneState extends State<HomeCarouselOne> {
 
-  late String data;
+  Map event = {};
 
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    print(directory.path);
-    return directory.path;
-  }
-
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/counter.txt');
-  }
-
-  Future<String> readContent() async {
-    try {
-      final file = await _localFile;
-      // Read the file
-      String contents = await file.readAsString();
-      // Returning the contents of the file
-      return contents;
-    } catch (e) {
-      // If encountering an error, return
-      return 'Error!';
-    }
-  }
-
-  Future<File> writeContent() async {
-    final file = await _localFile;
-    // Write the file
-    return file.writeAsString('R\$299,99');
-  }
-
-  Future<File> writeData(String data) async {
-    final file = await _localFile;
-    // Write the file
-    return file.writeAsString(data);
-  }
+  DatabaseController databaseController = DatabaseController();
 
   @override
   void initState() {
+    databaseController.readData().then((value) => event = value.value);
     super.initState();
-    writeContent();
-    readContent().then((String value) {
-      setState(() {
-        data = value;
-      });
-    });
+
   }
 
   @override
@@ -70,7 +33,7 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
       child: Container(
         padding: EdgeInsets.all(30),
         height: 400,
-        color: CustomColors.secondaryBlue,
+        color: CustomColors.primaryWhite,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,9 +60,13 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
                 ),
               ],
             ),
-            Text(data),
             Text("Gastos"),
-            Text("R\$ 300,00"),
+            // Text(event['value']),
+            // Text(event['description']),
+            // Text(event['date']),
+            // Text(event['category']),
+            // Text(event['isCredit']),
+
             Container(
               height: 20,
               color: CustomColors.primaryWhite,

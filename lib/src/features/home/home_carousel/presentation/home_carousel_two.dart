@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:http/http.dart' as http;
 
-import '../../../common/colors/colors.dart';
+import '../../../../common/colors/colors.dart';
 
 class LineChartWidget extends StatefulWidget {
   final bool isPositiveChange;
@@ -113,7 +113,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomColors.secondaryBlue,
+      backgroundColor: CustomColors.primaryWhite,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
