@@ -32,16 +32,16 @@ class _FinancialControlAppState extends State<FinancialControlApp> {
       routes: FinancialControlRoutes.financialRoutes,
       initialRoute: 'splash_screen',
       theme: ThemeData(
-        highlightColor:Colors.red ,
-        focusColor:Colors.red ,
-        primarySwatch: Colors.red,
+        highlightColor:Colors.green.shade800,
+        focusColor:Colors.green.shade800 ,
+        primarySwatch: Colors.green,
         iconTheme: IconThemeData(
-          color: CustomColors.secundaryRed,
+          color: Colors.green.shade800,
         ),
-        hoverColor: CustomColors.secundaryRed,
-        indicatorColor: CustomColors.secundaryRed,
-        primaryColor: CustomColors.secundaryRed,
-        cursorColor:  CustomColors.secundaryRed,
+        hoverColor: Colors.green.shade800,
+        indicatorColor:Colors.green.shade800,
+        primaryColor: Colors.green.shade800,
+        cursorColor:  Colors.green.shade800,
       )
     );
   }

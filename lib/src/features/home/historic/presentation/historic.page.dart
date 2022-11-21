@@ -17,22 +17,22 @@ class HistoricPage extends StatefulWidget {
 
 DatabaseController databaseController=DatabaseController();
 
-List<EventEntity> test = [
-  EventEntity(
+List<EventEntity2> test = [
+  EventEntity2(
     value: '200',
     description: 'Teste',
     type: 'false',
     category: CategoryEntity().alimentacao,
     date: ' ',
   ),
-  EventEntity(
+  EventEntity2(
     value: '200',
     description: 'Teste',
     type: 'false',
     category: CategoryEntity().lazer,
     date: ' ',
   ),
-  EventEntity(
+  EventEntity2(
     value: '200',
     description: 'Teste',
     type: 'false',

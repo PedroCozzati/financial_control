@@ -19,8 +19,7 @@ class _HomeCarouselMainState extends State<HomeCarouselMain> {
   //Create a List Holding all the Pages
   final List<Widget> _Pages = [
     HomeCarouselOne(),
-    LineChartWidget(true),
-    PieChartWidget(industrySectors),
+    PieChartWidget(),
   ];
   @override
   void dispose() {
@@ -49,9 +48,9 @@ class _HomeCarouselMainState extends State<HomeCarouselMain> {
             bottom: 0,
             left: 0,
             right: 0,
-            height: 40,
+            height: 30,
             child: Container(
-              color: Color(0x204E0202),
+              color: Color(0x282B4E02),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List<Widget>.generate(
@@ -65,7 +64,7 @@ class _HomeCarouselMainState extends State<HomeCarouselMain> {
                               curve: Curves.easeIn);
                         },
                         child: CircleAvatar(
-                          radius: 5,
+                          radius: 6,
                           // check if a dot is connected to the current page
                           // if true, give it a different color
                           backgroundColor: _activePage == index

@@ -12,8 +12,10 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+late List eventList;
 
 class _HomeScreenState extends State<HomeScreen> {
+
   int _selectedIndex = 1;
   static const List<Widget> _widgetOptions = <Widget>[
     HistoricPage(),
@@ -65,8 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: _widgetOptions.elementAt(_selectedIndex),
             ),
           ),
-    Container(
-      child: Center(
+    Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: FloatingActionButton(
@@ -79,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         }),
                       );
                     },
-                    backgroundColor: CustomColors.primayRed,
+                    backgroundColor:  Color(0xff5e7848),
                     child: Icon(
                       Icons.add,
                       size: 50,
@@ -87,7 +88,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
 
         ),
-      ),
     ),
           // Container(
           //   height: 80,
@@ -119,6 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
           // )
         ],
       ),
+
     );
   }
 }

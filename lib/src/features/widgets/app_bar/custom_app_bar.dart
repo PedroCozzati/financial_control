@@ -44,7 +44,7 @@ class _CustomAppBarState extends State {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 10),
+                  padding: const EdgeInsets.only(top: 5),
                   child: Text(
                     'Boa noite!',
                     style: TextStyle(
@@ -54,13 +54,23 @@ class _CustomAppBarState extends State {
                     textAlign: TextAlign.end,
                   ),
                 ),
-                IconButton(
-                  icon: Icon(
-                    Icons.info,
-                    color: CustomColors.primayRed,
-                    size: 40,
+                Container(
+                  height: 40,
+                  width: 40,
+                  decoration: BoxDecoration(
+                    color: Color(0xff5e7848),
+                    borderRadius:BorderRadius.circular(300)
                   ),
-                  onPressed: () {},
+                  child: Center(
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.question_mark_rounded,
+                        color: Color(0xffffffff),
+                        size: 25,
+                      ),
+                      onPressed: () {},
+                    ),
+                  ),
                 ),
               ],
             ),

@@ -345,7 +345,7 @@ class _EditEventFormState extends State<EditEventForm> {
     String date = _dateController.text;
     String isCredit = _typeController.text;
 
-    EventEntity event = EventEntity(
+    EventEntity2 event = EventEntity2(
         type: _typeSelected,
         description: description,
         date: date,

@@ -8,14 +8,14 @@
 // class EventModel extends EventEntity {
 //   final String value;
 //   final String description;
-//   final bool isCredit;
+//   final String type;
 //   final String category;
 //   final String date;
 //
 //   EventModel(
 //       {required this.value,
 //       required this.description,
-//       required this.isCredit,
+//       required this.type,
 //       required this.date,
 //       required this.category})
 //       : super(

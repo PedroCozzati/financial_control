@@ -1,14 +1,14 @@
 import 'package:financial_control/src/features/home/historic/domain/category.entity.dart';
 import 'package:flutter/foundation.dart';
 
-class EventEntity {
+class EventEntity2 {
   final String value;
   final String description;
   final String type;
   final String category;
   final String date;
 
-  EventEntity({
+  EventEntity2({
     required this.value,
     required this.description,
     required this.type,

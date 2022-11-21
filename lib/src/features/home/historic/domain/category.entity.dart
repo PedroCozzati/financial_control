@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class CategoryEntity {
   final String alimentacao = "Alimentacão";
   final String lazer = "Lazer";
@@ -5,18 +7,48 @@ class CategoryEntity {
   final String compras = "Compras";
   final String viagem = "Viagem";
   final String aluguel = "Aluguel";
-  final String contas =  "Contas";
+  final String contas = "Contas";
   final String outros = "Outros";
 
-  returnDebitCategories(){
+  returnDebitCategories() {
     return [
-      alimentacao,lazer,saude,compras,viagem,aluguel,contas,outros,
+      alimentacao,
+      lazer,
+      saude,
+      compras,
+      viagem,
+      aluguel,
+      contas,
+      outros,
     ];
   }
 
-  returnCreditCategories(){
+  returnCreditCategories() {
     return [
-      aluguel,contas,outros,
+      aluguel,
+      contas,
+      outros,
     ];
+  }
+
+  getColorByCategory(String category) {
+    switch (category) {
+      case "Aluguel":
+        return Colors.red;
+      case "Outros":
+        return Colors.blueGrey;
+      case "Contas":
+        return Colors.greenAccent;
+      case "Viagem":
+        return Colors.yellow;
+      case "Compras":
+        return Colors.deepPurple;
+      case "Saúde":
+        return Colors.orangeAccent;
+      case "Lazer":
+        return Colors.indigoAccent;
+      case "Alimentação":
+        return Colors.brown;
+    }
   }
 }
