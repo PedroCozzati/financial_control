@@ -1,4 +1,5 @@
 import 'package:financial_control/src/features/home/historic/presentation/historic.page.dart';
+import 'package:financial_control/src/features/home/info_page/page_info.dart';
 import 'package:financial_control/src/features/widgets/app_bar/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -18,8 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const List<Widget> _widgetOptions = <Widget>[
     HistoricPage(),
     HomeCarouselMain(),
-    Text('Profile Page',
-        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
+    PageInfo(),
   ];
 
   void _onItemTapped(int index) {
@@ -65,30 +65,29 @@ class _HomeScreenState extends State<HomeScreen> {
               child: _widgetOptions.elementAt(_selectedIndex),
             ),
           ),
-    Container(
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: FloatingActionButton(
-                    tooltip: "Incluir novos gastos",
-                    onPressed: (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) {
-                          return AddEventForm();
-                        }),
-                      );
-                    },
-                    backgroundColor: CustomColors.primayRed,
-                    child: Icon(
-                      Icons.add,
-                      size: 50,
-                    ),
+          Container(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FloatingActionButton(
+                  tooltip: "Incluir novos gastos",
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) {
+                        return AddEventForm();
+                      }),
+                    );
+                  },
+                  backgroundColor: CustomColors.primayRed,
+                  child: Icon(
+                    Icons.add,
+                    size: 50,
                   ),
-
-        ),
-      ),
-    ),
+                ),
+              ),
+            ),
+          ),
           // Container(
           //   height: 80,
           //   color: CustomColors.primaryBlue,

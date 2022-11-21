@@ -33,14 +33,11 @@ Future<String?> _getId() async {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
-
-
   Future getId() async {
     userId = await _getId();
   }
 
   void initState() {
-
     Future.delayed(const Duration(seconds: 6), () {
       if (!isInternet) {
         Future.delayed(const Duration(seconds: 3), () {
@@ -48,8 +45,8 @@ class _SplashScreenState extends State<SplashScreen> {
         });
       }
       Future.delayed(const Duration(seconds: 7), () {
-        getId().then((value) =>
-            Navigator.pushReplacementNamed(context, 'home'));
+        getId()
+            .then((value) => Navigator.pushReplacementNamed(context, 'home'));
       });
     });
 
