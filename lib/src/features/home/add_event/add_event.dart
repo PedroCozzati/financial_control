@@ -319,7 +319,10 @@ class _AddEventFormState extends State<AddEventForm> {
                           child: _buildEventCategory(category.lazer),
                         ),
                         SizedBox(width: 10),
-                        _buildEventCategory(category.aluguel),
+                        Visibility(
+                          visible: _typeSelected != "Receita",
+                          child: _buildEventCategory(category.aluguel),
+                        ),
                         SizedBox(width: 10),
                         Visibility(
                           visible: _typeSelected != "Receita",
@@ -336,10 +339,30 @@ class _AddEventFormState extends State<AddEventForm> {
                           child: _buildEventCategory(category.saude),
                         ),
                         SizedBox(width: 10),
-                        _buildEventCategory(category.contas),
+                        Visibility(
+                          visible: _typeSelected != "Receita",
+                          child: _buildEventCategory(category.contas),
+                        ),
                         SizedBox(width: 10),
-                        _buildEventCategory(category.outros),
+                        Visibility(
+                          visible: _typeSelected != "Receita",
+                          child: _buildEventCategory(category.outros),
+                        ),
                         SizedBox(width: 10),
+                        Visibility(
+                          visible: _typeSelected == "Receita",
+                          child: _buildEventCategory(category.outrosReceita),
+                        ),
+                        SizedBox(width: 10),
+                        Visibility(
+                          visible: _typeSelected == "Receita",
+                          child: _buildEventCategory(category.aluguelReceita),
+                        ),
+                        SizedBox(width: 10),
+                        Visibility(
+                          visible: _typeSelected == "Receita",
+                          child: _buildEventCategory(category.contasReceita),
+                        ),
                       ],
                     ),
                   ),

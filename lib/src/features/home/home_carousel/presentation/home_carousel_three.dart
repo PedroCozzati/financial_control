@@ -31,6 +31,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
   List categoryCreditList = [];
   List categoryDebitList = [];
   String _categorySelected = '';
+  String categorias="";
   final formatter =
       NumberFormat.simpleCurrency(locale: "pt_Br", decimalDigits: 2);
 
@@ -75,36 +76,35 @@ class _PieChartWidgetState extends State<PieChartWidget> {
     super.initState();
   }
 
-  Widget _buildEventCategory(String title) {
-    return InkWell(
-      child: Container(
-        height: 40,
-        width: 110,
-        decoration: BoxDecoration(
-          color: _categorySelected == title
-              ? CustomColors.secundaryRed
-              : CustomColors.primayRed,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Center(
-          child: Text(
-            title,
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
-      onTap: () {
-        setState(() {
-          _categorySelected = title;
-          categoryDebitList.clear();
-          categoryCreditList.clear();
-        });
-      },
-    );
-  }
+  // Widget _buildEventCategory() {
+  //   return InkWell(
+  //     child: Container(
+  //       height: 40,
+  //       width: 110,
+  //       decoration: BoxDecoration(
+  //         color:
+  //             CustomColors.secundaryRed
+  //         borderRadius: BorderRadius.circular(15),
+  //       ),
+  //       child: Center(
+  //         child: Text(
+  //           title,
+  //           style: TextStyle(
+  //             fontSize: 18,
+  //             color: Colors.white,
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //     onTap: () {
+  //       setState(() {
+  //         _categorySelected = title;
+  //         categoryDebitList.clear();
+  //         categoryCreditList.clear();
+  //       });
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -115,35 +115,41 @@ class _PieChartWidgetState extends State<PieChartWidget> {
 
     test();
     testC();
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildEventCategory('Receita'),
-            _buildEventCategory("Débito"),
-          ],
-        ),
-        Container(
-            height: 200,
-            child: PieChart(
-              PieChartData(
-                sections: _chartSections(),
-                centerSpaceRadius: 48.0,
+
+    for (String sector2 in categoryCreditList) {
+       categorias = sector2;
+    }
+    return Padding(
+      padding: const EdgeInsets.all(40.0),
+      child: Container(
+        height: 400,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+
+              Container(
+                  height: 200,
+                  child: PieChart(
+                    PieChartData(
+                      sections: _chartSections(),
+                      centerSpaceRadius: 48.0,
+                    ),
+                    swapAnimationDuration: Duration(seconds: 2),
+                  )),
+              Container(
+                height: 300,
+                width: 400,
+                child: ListView(
+                  children: eventList
+                      .map<Widget>((category) => SectorRow(category))
+                      .toList(),
+                ),
               ),
-              swapAnimationDuration: Duration(seconds: 2),
-            )),
-        Container(
-          height: 300,
-          width: 400,
-          child: ListView(
-            children: eventList
-                .map<Widget>((category) => SectorRow(category))
-                .toList(),
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
 
@@ -188,19 +194,22 @@ class _PieChartWidgetState extends State<PieChartWidget> {
       }
     }
 
-    for (double sector2 in creditsList) {
-      for (String cat2 in catList2) {
-        var test2 = sector2.toString().replaceAll('.', '');
-        const double radius = 40.0;
-        final data = PieChartSectionData(
-          color: categoryEntity.getColorByCategory(cat2),
-          value: double.parse(((test2.replaceAll(",", ".")))),
-          radius: radius,
-          title: '',
-        );
 
-       creditListData.add(data);
-      }
+    getCat34(){
+
+    }
+    for (EventEntity sector2 in eventList) {
+      var test2 = sector2.eventData!.value!.toString().replaceAll('.', '');
+      const double radius = 40.0;
+      final data = PieChartSectionData(
+        color: categoryEntity.getColorByCategory(sector2.eventData!.category!),
+        value: double.parse(((test2.replaceAll(",", ".")))),
+        radius: radius,
+        title: '',
+
+      );
+      creditListData.add(data);
+
     }
 
     // for (double sector in creditsList) {

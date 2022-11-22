@@ -26,7 +26,7 @@ class _ContactsState extends State<Contacts> {
   EventController eventController = EventController();
   late List eventList;
   final formatter =
-  NumberFormat.simpleCurrency(locale: "pt_Br", decimalDigits: 2);
+      NumberFormat.simpleCurrency(locale: "pt_Br", decimalDigits: 2);
 
   late Future<bool> listIsEmpty;
 
@@ -118,7 +118,7 @@ class _ContactsState extends State<Contacts> {
               Row(
                 children: [
                   Icon(
-                    Icons.calendar_month,
+                    Icons.calendar_today,
                     color: CustomColors.primayRed,
                     size: 26,
                   ),
@@ -154,62 +154,77 @@ class _ContactsState extends State<Contacts> {
             ],
           ),
           SizedBox(height: 15),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  CustomText(
-                    text: 'Tipo: ',
-                    color: CustomColors.primayRed,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold, textAlign: null,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Color(0xff64c76d)),
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                      child: Text(
-                        event['type'],
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600),
+          Container(
+            width: 700,
+            height: 40,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          CustomText(
+                            text: 'Tipo: ',
+                            color: CustomColors.primayRed,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            textAlign: null,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: event['type'] == "Receita"
+                                    ? Color(0xff64c76d)
+                                    : Colors.redAccent),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 2),
+                              child: Text(
+                                event['type'],
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  CustomText(
-                    text: 'Categoria: ',
-                    color: CustomColors.primayRed,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold, textAlign: null,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Color(0xffc7b864)),
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                      child: Text(
-                        event['category'],
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600),
+                      SizedBox(
+                        width: 25,
                       ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                      Row(
+                        children: [
+                          CustomText(
+                            text: 'Categoria: ',
+                            color: CustomColors.primayRed,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            textAlign: null,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Color(0xffc7b864)),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 2),
+                              child: Text(
+                                event['category'],
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ]),
+              ],
+            ),
           ),
           SizedBox(
             height: 15,
@@ -386,27 +401,29 @@ class _ContactsState extends State<Contacts> {
                               'lib/assets/loading_animation/loading_on_app.json'))));
             } else if (snapshot.data == false) {
               return
-              //   ListView(
-              //   children: [
-              //     for (int i = 0; i < eventList.length; i++)
-              //
-              //       _buildContactItem(event: eventList[i])
-              //   ],
-              // );
-                Align(
-                    alignment: Alignment.topCenter,
-                    child: FirebaseAnimatedList(
-                      duration: Duration(seconds: 1),
-                      shrinkWrap: true,
-                      reverse: true,
-                      query: _ref,
-                      itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                          Animation<double> animation, int index) {
-                        Map contact = snapshot.value;
-                        contact['key'] = snapshot.key;
-                        return _buildContactItem(event: contact);
-                      },
-                    ));
+                  //   ListView(
+                  //   children: [
+                  //     for (int i = 0; i < eventList.length; i++)
+                  //
+                  //       _buildContactItem(event: eventList[i])
+                  //   ],
+                  // );
+                  Align(
+                      alignment: Alignment.topCenter,
+                      child: FirebaseAnimatedList(
+                        duration: Duration(seconds: 1),
+                        shrinkWrap: true,
+                        reverse: true,
+                        query: _ref,
+                        itemBuilder: (BuildContext context,
+                            DataSnapshot snapshot,
+                            Animation<double> animation,
+                            int index) {
+                          Map contact = snapshot.value;
+                          contact['key'] = snapshot.key;
+                          return _buildContactItem(event: contact);
+                        },
+                      ));
             } else {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
