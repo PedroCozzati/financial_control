@@ -50,7 +50,7 @@ class CategoryEntity {
         return Colors.orangeAccent;
       case "Lazer -":
         return Colors.pink;
-      case "Alimentação -":
+      case "Alimentacão -":
         return Colors.purpleAccent;
       case "Aluguel +":
         return Colors.greenAccent;

@@ -71,6 +71,8 @@ class _ContactsState extends State<Contacts> {
     DateFormat dateFormat = DateFormat('dd-MM-yyyy');
     DateTime dateTime = dateFormat.parse(event['date'] ?? '');
 
+
+
     print(debits.length);
     // Color typeColor = getTypeColor(contact['category']);
     return Container(

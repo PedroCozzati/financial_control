@@ -120,14 +120,13 @@ class _PieChartWidgetState extends State<PieChartWidget> {
        categorias = sector2;
     }
     return Padding(
-      padding: const EdgeInsets.all(40.0),
+      padding: const EdgeInsets.all(20.0),
       child: Container(
         height: 400,
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-
               Container(
                   height: 200,
                   child: PieChart(
@@ -135,10 +134,10 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                       sections: _chartSections(),
                       centerSpaceRadius: 48.0,
                     ),
-                    swapAnimationDuration: Duration(seconds: 2),
+                    swapAnimationDuration: Duration(seconds: 5),
                   )),
               Container(
-                height: 300,
+                height: 270,
                 width: 400,
                 child: ListView(
                   children: eventList
@@ -238,22 +237,82 @@ class SectorRow extends StatelessWidget {
   SectorRow(this.sector, {Key? key}) : super(key: key);
   final EventEntity sector;
 
+  getCategoryNames(){
+    switch(sector.eventData!.category!){
+      case "Contas +":
+        return "Contas (Receita)";
+      case "Aluguel +":
+        return "Aluguel (Receita)";
+      case "Outros +":
+        return "Outros (Receita)";
+      case "Contas -":
+        return "Contas (Débito)";
+      case "Aluguel -":
+        return "Aluguel (Débito)";
+      case "Lazer -":
+        return "Lazer (Débito)";
+      case "Alimentacão -":
+        return "Alimentação (Débito)";
+      case "Outros -":
+        return "Outros (Débito)";
+      case "Viagem -":
+        return "Viagem (Débito)";
+      case "Compras -":
+        return "Compras (Débito)";
+      case "Saúde -":
+        return "Saúde (Débito)";
+      default:
+        return "";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(
-          width: 16,
-          child: CircleAvatar(
-            backgroundColor:
-                categoryEntity.getColorByCategory(sector.eventData!.category!),
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black54, width: 0.6),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.green.shade50.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 1,
+            offset: Offset(0, 1), // changes position of shadow
           ),
+        ],
+        color: CustomColors.fourthRed,
+        borderRadius: BorderRadius.circular(20),
+      ),
+
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                SizedBox(
+                  width: 16,
+                  child: CircleAvatar(
+                    backgroundColor:
+                        categoryEntity.getColorByCategory(sector.eventData!.category!),
+                  ),
+                ),
+                const Spacer(),
+                Text(getCategoryNames(),style: TextStyle(fontWeight: FontWeight.bold)),
+                const Spacer(),
+                Text(sector.eventData!.value!,style: TextStyle(fontWeight: FontWeight.bold),),
+              ],
+            ),
+            Row(
+              crossAxisAlignment:CrossAxisAlignment.start,
+              children: [
+                Text('Descrição: '),
+                Text(sector.eventData!.description!,style: TextStyle(fontWeight: FontWeight.bold),),
+              ],
+            )
+          ],
         ),
-        const Spacer(),
-        Text(sector.eventData!.category!),
-        const Spacer(),
-        Text(sector.eventData!.value!),
-      ],
+      ),
     );
   }
 }
