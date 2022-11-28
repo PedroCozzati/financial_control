@@ -9,8 +9,10 @@ import '../../../common/colors/colors.dart';
 import '../../../common/database/database_controller.dart';
 import '../../splash_screen/presentation/splash_screen.page.dart';
 import '../../widgets/custom_text/custom_text.dart';
-import '../historic/domain/category.entity.dart';
+import '../historic/model/category.dart';
+import '../historic/model/category.entity.dart';
 import '../historic/domain/event.entity.dart';
+import '../historic/model/event.dart';
 
 class AddEventForm extends StatefulWidget {
   @override
@@ -23,7 +25,7 @@ class _AddEventFormState extends State<AddEventForm> {
   bool _validate = false;
   static const _locale = 'en';
   late String valor, email, celular;
-  CategoryEntity category = CategoryEntity();
+  Categories category = Categories();
   DatabaseController databaseController = DatabaseController();
   bool isCredit = false;
   late MoneyMaskedTextController _valueController;
@@ -32,7 +34,7 @@ class _AddEventFormState extends State<AddEventForm> {
   late TextEditingController _dateController;
   late TextEditingController _typeController;
   String _categorySelected = '';
-  String _typeSelected = 'Débito';
+  String _typeSelected = '';
   DateTime? pickedDate;
 
   String _formatNumber(String s) =>
@@ -43,11 +45,14 @@ class _AddEventFormState extends State<AddEventForm> {
 
   late DatabaseReference _ref;
   late FormState formState;
+  bool isVisible = true;
+  bool msgErrorIsVisible = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    msgErrorIsVisible = false;
     _valueController = MoneyMaskedTextController(
         decimalSeparator: ',', thousandSeparator: '.');
     _descriptionController = TextEditingController();
@@ -61,7 +66,7 @@ class _AddEventFormState extends State<AddEventForm> {
     return InkWell(
       child: Container(
         height: 40,
-        width: 110,
+        width: 120,
         decoration: BoxDecoration(
           color: _categorySelected == title
               ? CustomColors.secundaryRed
@@ -306,65 +311,80 @@ class _AddEventFormState extends State<AddEventForm> {
                   ),
                   Container(
                     height: 40,
-                    child: ListView(
+                    child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      children: [
-                        Visibility(
-                          child: _buildEventCategory(category.alimentacao),
-                          visible: _typeSelected != "Receita",
-                        ),
-                        SizedBox(width: 10),
-                        Visibility(
-                          visible: _typeSelected != "Receita",
-                          child: _buildEventCategory(category.lazer),
-                        ),
-                        SizedBox(width: 10),
-                        Visibility(
-                          visible: _typeSelected != "Receita",
-                          child: _buildEventCategory(category.aluguel),
-                        ),
-                        SizedBox(width: 10),
-                        Visibility(
-                          visible: _typeSelected != "Receita",
-                          child: _buildEventCategory(category.viagem),
-                        ),
-                        SizedBox(width: 10),
-                        Visibility(
-                          visible: _typeSelected != "Receita",
-                          child: _buildEventCategory(category.compras),
-                        ),
-                        SizedBox(width: 10),
-                        Visibility(
-                          visible: _typeSelected != "Receita",
-                          child: _buildEventCategory(category.saude),
-                        ),
-                        SizedBox(width: 10),
-                        Visibility(
-                          visible: _typeSelected != "Receita",
-                          child: _buildEventCategory(category.contas),
-                        ),
-                        SizedBox(width: 10),
-                        Visibility(
-                          visible: _typeSelected != "Receita",
-                          child: _buildEventCategory(category.outros),
-                        ),
-                        SizedBox(width: 10),
-                        Visibility(
-                          visible: _typeSelected == "Receita",
-                          child: _buildEventCategory(category.outrosReceita),
-                        ),
-                        SizedBox(width: 10),
-                        Visibility(
-                          visible: _typeSelected == "Receita",
-                          child: _buildEventCategory(category.aluguelReceita),
-                        ),
-                        SizedBox(width: 10),
-                        Visibility(
-                          visible: _typeSelected == "Receita",
-                          child: _buildEventCategory(category.contasReceita),
-                        ),
-                      ],
+                      itemCount:_typeSelected == "Receita"? category.getCreditCategories().length: category.getDebitCategories().length ,
+                      itemBuilder: (BuildContext context, int index) {
+                        return _typeSelected == "Receita"? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: _buildEventCategory(
+                                category.getCreditCategories()[index]),
+                        ): Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          child: _buildEventCategory(
+                                category.getDebitCategories()[index]),
+                        );
+                        //       category.alimentacao);
+                      },
                     ),
+
+                    // Visibility(
+                    //   visible: _typeSelected == "Receita",
+                    //   child:
+                    // ),
+                    // Visibility(
+                    //   child: _buildEventCategory(
+                    //       category.alimentacao),
+                    //   visible: _typeSelected != "Receita",
+                    // ),
+                    // SizedBox(width: 10),
+                    // Visibility(
+                    //   visible: _typeSelected != "Receita",
+                    //   child: _buildEventCategory(
+                    //       category.lazer),
+                    // ),
+                    // SizedBox(width: 10),
+                    // Visibility(
+                    //   visible: _typeSelected != "Receita",
+                    //   child: _buildEventCategory(
+                    //       category.aluguel),
+                    // ),
+                    // SizedBox(width: 10),
+                    // Visibility(
+                    //   visible: _typeSelected != "Receita",
+                    //   child: _buildEventCategory(
+                    //       category.viagem),
+                    // ),
+                    // SizedBox(width: 10),
+                    // Visibility(
+                    //   visible: _typeSelected != "Receita",
+                    //   child: _buildEventCategory(
+                    //       category.compras),
+                    // ),
+                    // SizedBox(width: 10),
+                    // Visibility(
+                    //   visible: _typeSelected != "Receita",
+                    //   child: _buildEventCategory(
+                    //       category.saude.replaceAll('-', '')),
+                    // ),
+                    // SizedBox(width: 10),
+                    // Visibility(
+                    //   visible: _typeSelected != "Receita",
+                    //   child: _buildEventCategory(
+                    //       category.contas.replaceAll('-', '')),
+                    // ),
+                    // SizedBox(width: 10),
+                    // Visibility(
+                    //   visible: _typeSelected != "Receita",
+                    //   child: _buildEventCategory(
+                    //       category.outros.replaceAll('-', '')),
+                    // ),
+                    // SizedBox(width: 10),
+                    // SizedBox(width: 10),
+                    // Visibility(
+                    //   visible: _typeSelected == "Receita",
+                    //   child: _buildEventCategory(category.contasReceita),
+                    // ),
                   ),
                 ],
               ),
@@ -374,43 +394,70 @@ class _AddEventFormState extends State<AddEventForm> {
             ),
           ],
         ),
-        Column(
-          children: [
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 50),
-              child: FlatButton(
-                height: 50,
-                shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                        color: Colors.white,
-                        width: 1,
-                        style: BorderStyle.solid),
-                    borderRadius: BorderRadius.circular(50)),
-                child: Text(
-                  'Salvar',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+        isVisible
+            ? Column(
+                children: [
+                  Visibility(
+                    visible: msgErrorIsVisible,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Color(0x42c7646c),
+                        border: Border.all(color: Colors.black54, width: 0.7),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(27.0),
+                        child: Text(
+                          "Dica: O formulário não pode ser salvo se o tipo e a categoria não estiverem selecionados",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 15),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                onPressed: () {
-                  // if(pickedDate!=null) {
-                  //
-                  // }
-                  if (_key.currentState!.validate()) {
-                    DateTime date =
-                        DateFormat('dd-MM-yyyy').parse(_dateController.text);
-                    timeStamp = date.millisecondsSinceEpoch;
-                    saveContact();
-                  }
-                },
-                color: CustomColors.primayRed,
-              ),
-            ),
-          ],
-        )
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 50),
+                    child: FlatButton(
+                      height: 50,
+                      shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                              color: Colors.white,
+                              width: 1,
+                              style: BorderStyle.solid),
+                          borderRadius: BorderRadius.circular(50)),
+                      child: Text(
+                        'Salvar',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      onPressed: () {
+                        // if(pickedDate!=null) {
+                        //
+                        // }
+                        if (_key.currentState!.validate()) {
+                          DateTime date = DateFormat('dd-MM-yyyy')
+                              .parse(_dateController.text);
+                          timeStamp = date.millisecondsSinceEpoch;
+                          if (_typeSelected != '' && _categorySelected != '') {
+                            isVisible = false;
+                            saveContact();
+                          }
+                          //msgErrorIsVisible = true;
+                          setState(() {
+                            msgErrorIsVisible = true;
+                          });
+                        }
+                      },
+                      color: CustomColors.primayRed,
+                    ),
+                  ),
+                ],
+              )
+            : CircularProgressIndicator()
       ],
     );
   }
@@ -420,7 +467,7 @@ class _AddEventFormState extends State<AddEventForm> {
     String description = _descriptionController.text;
     String date = _dateController.text;
 
-    EventEntity2 event = EventEntity2(
+    EventData event = EventData(
         type: _typeSelected,
         description: description,
         date: date,
@@ -428,11 +475,11 @@ class _AddEventFormState extends State<AddEventForm> {
         category: _categorySelected);
 
     Map<String, String> contact = {
-      'value': event.value,
-      'description': event.description,
-      'type': event.type,
-      'category': event.category,
-      'date': event.date,
+      'value': event.value!,
+      'description': event.description!,
+      'type': event.type!,
+      'category': event.category!,
+      'date': event.date!,
       'timeStamp': timeStamp.toString(),
     };
 

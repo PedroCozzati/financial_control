@@ -41,13 +41,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void initState() {
 
-    Future.delayed(const Duration(seconds: 6), () {
+    Future.delayed(const Duration(seconds: 2), () {
       if (!isInternet) {
-        Future.delayed(const Duration(seconds: 3), () {
+        Future.delayed(const Duration(seconds: 2), () {
           Navigator.pushReplacementNamed(context, 'error_page');
         });
       }
-      Future.delayed(const Duration(seconds: 7), () {
+      Future.delayed(const Duration(seconds: 4), () {
         getId().then((value) =>
             Navigator.pushReplacementNamed(context, 'home'));
       });

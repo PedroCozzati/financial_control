@@ -1,3 +1,5 @@
+import 'package:financial_control/src/features/home/historic/model/category.dart';
+
 class EventEntity {
   String? key;
   EventData? eventData;
@@ -15,6 +17,8 @@ class EventData {
   EventData({
     required this.value, this.description, required this.type, required this.date, required this.category
   });
+
+
 
   EventData.fromJson(Map<dynamic, dynamic> json){
     value = json["value"];

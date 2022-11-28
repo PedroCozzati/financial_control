@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:financial_control/src/features/financial_control.dart';
 import 'package:financial_control/src/features/home/historic/presentation/contacts.dart';
-import 'package:financial_control/src/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -26,7 +25,6 @@ Future<bool> isInternetConnected() async {
 }
 
 Future<void> main() async {
-  init();
   WidgetsFlutterBinding.ensureInitialized();
   databaseReference = FirebaseDatabase.instance.reference();
 

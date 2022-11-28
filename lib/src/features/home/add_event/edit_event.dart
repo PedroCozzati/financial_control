@@ -7,7 +7,8 @@ import 'package:flutter_masked_text/flutter_masked_text.dart';
 import '../../../common/colors/colors.dart';
 import '../../../common/database/database_controller.dart';
 import '../../splash_screen/presentation/splash_screen.page.dart';
-import '../historic/domain/category.entity.dart';
+import '../../widgets/custom_text/custom_text.dart';
+import '../historic/model/category.entity.dart';
 import '../historic/domain/event.entity.dart';
 
 class EditEventForm extends StatefulWidget {
@@ -20,11 +21,12 @@ class EditEventForm extends StatefulWidget {
 }
 
 class _EditEventFormState extends State<EditEventForm> {
+  int timeStamp = 0;
   GlobalKey<FormState> _key = new GlobalKey();
   bool _validate = false;
   static const _locale = 'en';
   late String valor, email, celular;
-  CategoryEntity category = CategoryEntity();
+  Categories category = Categories();
   DatabaseController databaseController = DatabaseController();
   bool isCredit = false;
   late MoneyMaskedTextController _valueController;
@@ -32,7 +34,9 @@ class _EditEventFormState extends State<EditEventForm> {
   late TextEditingController _categoryController;
   late TextEditingController _dateController;
   late TextEditingController _typeController;
+  String _categorySelected = '';
   String _typeSelected = '';
+  DateTime? pickedDate;
 
   String _formatNumber(String s) =>
       NumberFormat.decimalPattern(_locale).format(int.parse(s));
@@ -42,6 +46,7 @@ class _EditEventFormState extends State<EditEventForm> {
 
   late DatabaseReference _ref;
   late FormState formState;
+  bool msgErrorIsVisible = false;
 
   @override
   void initState() {
@@ -56,15 +61,44 @@ class _EditEventFormState extends State<EditEventForm> {
     _ref = FirebaseDatabase.instance.reference().child(userId).child('events');
   }
 
-  Widget _buildContactType(String title) {
+  Widget _buildEventCategory(String title) {
+    return InkWell(
+      child: Container(
+        height: 40,
+        width: 120,
+        decoration: BoxDecoration(
+          color: _categorySelected == title
+              ? CustomColors.secundaryRed
+              : CustomColors.primayRed,
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Center(
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+      onTap: () {
+        setState(() {
+          _categorySelected = title;
+        });
+      },
+    );
+  }
+
+  Widget _buildEventType(String title) {
     return InkWell(
       child: Container(
         height: 40,
         width: 110,
         decoration: BoxDecoration(
           color: _typeSelected == title
-              ? CustomColors.secundaryRed
-              : CustomColors.primayRed,
+              ? CustomColors.primaryGreen
+              : CustomColors.primaryYellow,
           borderRadius: BorderRadius.circular(15),
         ),
         child: Center(
@@ -107,12 +141,14 @@ class _EditEventFormState extends State<EditEventForm> {
             style: TextStyle(color: Colors.black),
           ),
         ),
-        body: Container(
-          margin: new EdgeInsets.all(15.0),
-          child: new Form(
-            key: _key,
-            //autovalidate: _validate,
-            child: _formUI(),
+        body: SingleChildScrollView(
+          child: Container(
+            margin: new EdgeInsets.all(15.0),
+            child: new Form(
+              key: _key,
+              //autovalidate: _validate,
+              child: _formUI(),
+            ),
           ),
         ),
       ),
@@ -125,6 +161,7 @@ class _EditEventFormState extends State<EditEventForm> {
       children: [
         Column(
           children: <Widget>[
+            SizedBox(height: 55),
             TextFormField(
               cursorColor: CustomColors.secundaryRed,
               controller: _valueController,
@@ -132,14 +169,6 @@ class _EditEventFormState extends State<EditEventForm> {
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly
               ],
-              // Only num
-              // onChanged: (string) {
-              //   string = '${_formatNumber(string.replaceAll(',', ''))}';
-              //   _valueController.value = TextEditingValue(
-              //     text: string,
-              //     selection: TextSelection.collapsed(offset: string.length),
-              //   );
-              // },
               decoration: InputDecoration(
                 prefixText: _currency + " ",
                 focusColor: CustomColors.secundaryRed,
@@ -147,7 +176,7 @@ class _EditEventFormState extends State<EditEventForm> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25.0),
                 ),
-                hintText: 'Digite o valor',
+                hintText: 'Edite o valor',
                 prefixIcon: Icon(
                   Icons.money,
                   size: 30,
@@ -178,7 +207,7 @@ class _EditEventFormState extends State<EditEventForm> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25.0),
                 ),
-                hintText: 'Digite uma descrição',
+                hintText: 'Edite sua descrição',
                 prefixIcon: Icon(
                   Icons.info,
                   size: 30,
@@ -188,11 +217,11 @@ class _EditEventFormState extends State<EditEventForm> {
                 contentPadding: EdgeInsets.all(15),
               ),
               validator: (val) {
-                if (val!.isEmpty) {
-                  return "Email cannot be empty";
-                } else {
-                  return null;
-                }
+                // if (val!.isEmpty) {
+                //   return "Descrição não";
+                // } else {
+                //   return null;
+                // }
               },
             ),
             SizedBox(
@@ -201,45 +230,33 @@ class _EditEventFormState extends State<EditEventForm> {
             TextFormField(
               controller: _dateController,
               decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                hintText: 'Enter Number',
-                prefixIcon: Icon(
-                  Icons.info,
-                  size: 30,
-                ),
-                fillColor: Colors.white,
-                filled: true,
-                contentPadding: EdgeInsets.all(15),
-              ),
-              validator: (val) {
-                if (val!.isEmpty) {
-                  return "Email cannot be empty";
-                } else {
-                  return null;
-                }
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                  prefixIcon: Icon(Icons.calendar_today), //icon of text field
+                  labelText: "Edite a data" //label text of field
+                  ),
+              readOnly: true,
+              //set it true, so that user will not able to edit text
+              onTap: () async {
+                pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(1950),
+                    lastDate: DateTime(2100));
+                if (pickedDate != null) {
+                  String formattedDate =
+                      DateFormat('dd-MM-yyyy').format(pickedDate!);
+
+                  setState(() {
+                    _dateController.text =
+                        formattedDate; //set output date to TextField value.
+                  });
+                } else {}
               },
-            ),
-            SizedBox(height: 15),
-            TextFormField(
-              controller: _typeController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                hintText: 'Enter Number',
-                prefixIcon: Icon(
-                  Icons.info,
-                  size: 30,
-                ),
-                fillColor: Colors.white,
-                filled: true,
-                contentPadding: EdgeInsets.all(15),
-              ),
               validator: (val) {
-                if (val!.isEmpty) {
-                  return "Email cannot be empty";
+                if (pickedDate == null) {
+                  return "Data não pode ser nula";
                 } else {
                   return null;
                 }
@@ -247,41 +264,124 @@ class _EditEventFormState extends State<EditEventForm> {
             ),
             SizedBox(height: 55),
             Container(
-              height: 40,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
+              height: 80,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Visibility(
-                    child: _buildContactType(category.alimentacao),
-                    visible: !isCredit,
+                  CustomText(
+                    color: CustomColors.primayRed,
+                    text: 'Edite a categoria',
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    textAlign: null,
                   ),
-                  SizedBox(width: 10),
-                  Visibility(
-                    visible: !isCredit,
-                    child: _buildContactType(category.lazer),
+                  Container(
+                    height: 40,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width - 30,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              _buildEventType('Receita'),
+                              _buildEventType('Débito')
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(width: 10),
-                  _buildContactType(category.aluguel),
-                  SizedBox(width: 10),
-                  Visibility(
-                    visible: !isCredit,
-                    child: _buildContactType(category.viagem),
+                ],
+              ),
+            ),
+            SizedBox(height: 55),
+            Container(
+              height: 80,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CustomText(
+                    color: CustomColors.primayRed,
+                    text: 'Escolha a categoria',
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    textAlign: null,
                   ),
-                  SizedBox(width: 10),
-                  Visibility(
-                    visible: !isCredit,
-                    child: _buildContactType(category.compras),
+                  Container(
+                    height: 40,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        Visibility(
+                          visible: _typeSelected == "Receita",
+                          child: _buildEventCategory(
+                              category.outros.replaceAll('+', '')),
+                        ),
+                        Visibility(
+                          child: _buildEventCategory(
+                              category.alimentacao.replaceAll('-', '')),
+                          visible: _typeSelected != "Receita",
+                        ),
+                        SizedBox(width: 10),
+                        Visibility(
+                          visible: _typeSelected != "Receita",
+                          child: _buildEventCategory(
+                              category.lazer.replaceAll('-', '')),
+                        ),
+                        SizedBox(width: 10),
+                        Visibility(
+                          visible: _typeSelected != "Receita",
+                          child: _buildEventCategory(
+                              category.aluguel.replaceAll('-', '')),
+                        ),
+                        SizedBox(width: 10),
+                        Visibility(
+                          visible: _typeSelected != "Receita",
+                          child: _buildEventCategory(
+                              category.viagem.replaceAll('-', '')),
+                        ),
+                        SizedBox(width: 10),
+                        Visibility(
+                          visible: _typeSelected != "Receita",
+                          child: _buildEventCategory(
+                              category.compras.replaceAll('-', '')),
+                        ),
+                        SizedBox(width: 10),
+                        Visibility(
+                          visible: _typeSelected == "Receita",
+                          child: _buildEventCategory(
+                              category.aluguel.replaceAll('+', '')),
+                        ),
+                        SizedBox(width: 10),
+                        Visibility(
+                          visible: _typeSelected != "Receita",
+                          child: _buildEventCategory(
+                              category.saude.replaceAll('-', '')),
+                        ),
+                        SizedBox(width: 10),
+                        Visibility(
+                          visible: _typeSelected != "Receita",
+                          child: _buildEventCategory(
+                              category.contas.replaceAll('-', '')),
+                        ),
+                        SizedBox(width: 10),
+                        Visibility(
+                          visible: _typeSelected != "Receita",
+                          child: _buildEventCategory(
+                              category.outros.replaceAll('-', '')),
+                        ),
+                        SizedBox(width: 10),
+                        SizedBox(width: 10),
+                        Visibility(
+                          visible: _typeSelected == "Receita",
+                          child: _buildEventCategory(
+                              category.contas.replaceAll('+', '')),
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(width: 10),
-                  Visibility(
-                    visible: !isCredit,
-                    child: _buildContactType(category.saude),
-                  ),
-                  SizedBox(width: 10),
-                  _buildContactType(category.contas),
-                  SizedBox(width: 10),
-                  _buildContactType(category.outros),
-                  SizedBox(width: 10),
                 ],
               ),
             ),
@@ -292,6 +392,27 @@ class _EditEventFormState extends State<EditEventForm> {
         ),
         Column(
           children: [
+            Visibility(
+              visible: msgErrorIsVisible,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0x42c7646c),
+                  border: Border.all(
+                    color: Colors.black54,
+                    width: 0.7
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(27.0),
+                  child: Text(
+                      "O formulário não pode ser salvo se o tipo e a receita não estiverem selecionados",style: TextStyle(
+                    fontWeight: FontWeight.bold,fontSize: 15
+                  ),),
+                ),
+              ),
+            ),
             Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 50),
@@ -312,9 +433,24 @@ class _EditEventFormState extends State<EditEventForm> {
                   ),
                 ),
                 onPressed: () {
+                  // if(pickedDate!=null) {
+                  //
+                  // }
                   if (_key.currentState!.validate()) {
-                    saveContact();
+                    DateTime date =
+                        DateFormat('dd-MM-yyyy').parse(_dateController.text);
+                    timeStamp = date.millisecondsSinceEpoch;
+
+                    if (_typeSelected != '' && _categorySelected != '') {
+                      saveContact();
+                    } else {
+                      msgErrorIsVisible=true;
+                      setState(() {
+                        msgErrorIsVisible=true;
+                      });
+                    }
                   }
+                  msgErrorIsVisible=true;
                 },
                 color: CustomColors.primayRed,
               ),
@@ -325,39 +461,19 @@ class _EditEventFormState extends State<EditEventForm> {
     );
   }
 
-  getContactDetail() async {
-    DataSnapshot snapshot = await _ref.child(widget.contactKey).once();
-
-    Map event = snapshot.value;
-
-    _valueController.text = event['value'];
-
-    _descriptionController.text = event['description'];
-
-    setState(() {
-      _typeSelected = event['type'];
-    });
-  }
-
   void saveContact() {
     String value = _valueController.text;
     String description = _descriptionController.text;
     String date = _dateController.text;
-    String isCredit = _typeController.text;
 
-    EventEntity2 event = EventEntity2(
-        type: _typeSelected,
-        description: description,
-        date: date,
-        value: value,
-        category: _typeSelected);
 
     Map<String, String> contact = {
-      'value': event.value,
-      'description': event.description,
-      'isCredit': false.toString(),
-      'category': event.category,
-      'date': event.date,
+      'value': ' ',
+      'description': ' ',
+      'type': ' ',
+      'category': ' ',
+      'date': 'event.date',
+      'timeStamp': ' ',
     };
 
     _ref.child(widget.contactKey).update(contact).then((value) {

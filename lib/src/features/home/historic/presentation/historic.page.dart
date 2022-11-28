@@ -1,7 +1,8 @@
-import 'package:financial_control/src/features/home/historic/domain/category.entity.dart';
+import 'package:financial_control/src/features/home/historic/model/category.entity.dart';
 import 'package:financial_control/src/features/home/historic/domain/event.entity.dart';
 import 'package:financial_control/src/features/home/historic/presentation/contacts.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../main.dart';
@@ -16,30 +17,6 @@ class HistoricPage extends StatefulWidget {
 }
 
 DatabaseController databaseController=DatabaseController();
-
-List<EventEntity2> test = [
-  EventEntity2(
-    value: '200',
-    description: 'Teste',
-    type: 'false',
-    category: CategoryEntity().alimentacao,
-    date: ' ',
-  ),
-  EventEntity2(
-    value: '200',
-    description: 'Teste',
-    type: 'false',
-    category: CategoryEntity().lazer,
-    date: ' ',
-  ),
-  EventEntity2(
-    value: '200',
-    description: 'Teste',
-    type: 'false',
-    category: CategoryEntity().alimentacao,
-    date: ' ',
-  )
-];
 
 class _HistoricPageState extends State<HistoricPage> {
 

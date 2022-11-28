@@ -1,7 +1,7 @@
 {
   "project_info": {
     "project_number": "544833289731",
-    "firebase_url": "https://console.firebase.google.com/u/0/project/financial-control-8766c/database/financial-control-8766c-default-rtdb/data/~2F",
+    "firebase_url": "https://financial-control-8766c-default-rtdb.firebaseio.com",
     "project_id": "financial-control-8766c",
     "storage_bucket": "financial-control-8766c.appspot.com"
   },
@@ -14,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "544833289731-bqm5t7t9c6q9faeec7nm7qqbdu6741eh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.financial.control.financial_control",
+            "certificate_hash": "efdd78ec00d851f92bc9fc8069828bdf2b15c417"
+          }
+        },
         {
           "client_id": "544833289731-ignl1u5tl9dptb98t041su9cvlucn95e.apps.googleusercontent.com",
           "client_type": 3
@@ -30,6 +38,13 @@
             {
               "client_id": "544833289731-ignl1u5tl9dptb98t041su9cvlucn95e.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "544833289731-jtn2nta2h7jfpamkp4c090u4mnvqncor.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.financial.control"
+              }
             }
           ]
         }

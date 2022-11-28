@@ -20,8 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
   static const List<Widget> _widgetOptions = <Widget>[
     HistoricPage(),
     HomeCarouselMain(),
-    Text('Profile Page',
-        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
   ];
 
   void _onItemTapped(int index) {
@@ -43,11 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: Icon(Icons.home),
                 label: 'Home',
                 backgroundColor: Colors.green),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.info),
-              label: 'Info',
-              backgroundColor: Colors.blue,
-            ),
+
           ],
           backgroundColor: CustomColors.primaryWhite,
           unselectedItemColor: CustomColors.thirdRed,
@@ -69,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
     Center(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(5.0),
           child: FloatingActionButton(
                     tooltip: "Incluir novos gastos",
                     onPressed: (){

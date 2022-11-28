@@ -48,7 +48,7 @@ class _HomeCarouselMainState extends State<HomeCarouselMain> {
             bottom: 0,
             left: 0,
             right: 0,
-            height: 30,
+            height: 20,
             child: Container(
               color: Color(0x282B4E02),
               child: Row(

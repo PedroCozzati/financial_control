@@ -32,6 +32,7 @@ class _ContactsState extends State<Contacts> {
 
   void retrieveStudentData() async {
     await reference.onChildAdded.listen((data) {
+      print(data.snapshot.value.toString());
       EventData eventData = EventData.fromJson(data.snapshot.value as Map);
       EventEntity event =
           EventEntity(key: data.snapshot.key, eventData: eventData);
@@ -71,9 +72,6 @@ class _ContactsState extends State<Contacts> {
     DateFormat dateFormat = DateFormat('dd-MM-yyyy');
     DateTime dateTime = dateFormat.parse(event['date'] ?? '');
 
-
-
-    print(debits.length);
     // Color typeColor = getTypeColor(contact['category']);
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -91,7 +89,7 @@ class _ContactsState extends State<Contacts> {
         borderRadius: BorderRadius.circular(20),
       ),
       padding: EdgeInsets.all(20),
-      height: 200,
+      height: 220,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -198,6 +196,7 @@ class _ContactsState extends State<Contacts> {
                         width: 25,
                       ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           CustomText(
                             text: 'Categoria: ',
@@ -232,60 +231,70 @@ class _ContactsState extends State<Contacts> {
             height: 15,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => EditEventForm(
-                                contactKey: event['key'],
-                              )));
-                },
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.edit,
-                      color: Color(0xff756922),
+              Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Color(0xff9d8e32), width: 0.9)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => EditEventForm(
+                                      contactKey: event['key'],
+                                    )));
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.edit,
+                            color: Color(0xffa39331),
+                          ),
+                          SizedBox(
+                            width: 6,
+                          ),
+                          Text('Edit',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Color(0xff756922),
+                                  fontWeight: FontWeight.w600)),
+                        ],
+                      ),
                     ),
-                    SizedBox(
-                      width: 6,
+                  )),
+              SizedBox(width: 40,),
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.red, width: 0.9)),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: InkWell(
+                    onTap: () {
+                      _showDeleteDialog(event: event);
+                    },
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.delete,
+                          color: Colors.red[700],
+                        ),
+                        SizedBox(
+                          width: 6,
+                        ),
+                        Text('Delete',
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.red[700],
+                                fontWeight: FontWeight.w600)),
+                      ],
                     ),
-                    Text('Edit',
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Color(0xff756922),
-                            fontWeight: FontWeight.w600)),
-                  ],
+                  ),
                 ),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              GestureDetector(
-                onTap: () {
-                  _showDeleteDialog(event: event);
-                },
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.delete,
-                      color: Colors.red[700],
-                    ),
-                    SizedBox(
-                      width: 6,
-                    ),
-                    Text('Delete',
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.red[700],
-                            fontWeight: FontWeight.w600)),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: 20,
               ),
             ],
           )
@@ -293,6 +302,35 @@ class _ContactsState extends State<Contacts> {
       ),
     );
   }
+
+  // getCategoryNames(Map event) {
+  //   switch (event['category']) {
+  //     case "Contas +":
+  //       return "Contas";
+  //     case "Aluguel +":
+  //       return "Aluguel";
+  //     case "Outros +":
+  //       return "Outros";
+  //     case "Contas ":
+  //       return "Contas";
+  //     case "Aluguel ":
+  //       return "Aluguel";
+  //     case "Lazer ":
+  //       return "Lazer";
+  //     case "Alimentacão ":
+  //       return "Alimentação";
+  //     case "Outros ":
+  //       return "Outros";
+  //     case "Viagem ":
+  //       return "Viagem";
+  //     case "Compras":
+  //       return "Compras";
+  //     case "Saúde ":
+  //       return "Saúde";
+  //     default:
+  //       return "";
+  //   }
+  // }
 
   _showDeleteDialog({required Map event}) {
     showDialog(
