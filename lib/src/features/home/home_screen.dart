@@ -12,10 +12,10 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+
 late List eventList;
 
 class _HomeScreenState extends State<HomeScreen> {
-
   int _selectedIndex = 1;
   static const List<Widget> _widgetOptions = <Widget>[
     HistoricPage(),
@@ -41,7 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: Icon(Icons.home),
                 label: 'Home',
                 backgroundColor: Colors.green),
-
           ],
           backgroundColor: CustomColors.primaryWhite,
           unselectedItemColor: CustomColors.thirdRed,
@@ -61,28 +60,25 @@ class _HomeScreenState extends State<HomeScreen> {
               child: _widgetOptions.elementAt(_selectedIndex),
             ),
           ),
-    Center(
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: FloatingActionButton(
-                    tooltip: "Incluir novos gastos",
-                    onPressed: (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) {
-                          return AddEventForm();
-                        }),
-                      );
-                    },
-                    backgroundColor:  Color(0xff5e7848),
-                    child: Icon(
-                      Icons.add,
-                      size: 50,
-                    ),
-                  ),
-
-        ),
-    ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: FloatingActionButton(
+                tooltip: "Incluir novos gastos",
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    'create_event',
+                  );
+                },
+                backgroundColor: Color(0xff5e7848),
+                child: Icon(
+                  Icons.add,
+                  size: 50,
+                ),
+              ),
+            ),
+          ),
           // Container(
           //   height: 80,
           //   color: CustomColors.primaryBlue,
@@ -113,7 +109,6 @@ class _HomeScreenState extends State<HomeScreen> {
           // )
         ],
       ),
-
     );
   }
 }

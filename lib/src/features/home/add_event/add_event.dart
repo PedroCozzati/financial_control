@@ -1,3 +1,5 @@
+import 'package:financial_control/src/model/category.entity.dart';
+import 'package:financial_control/src/model/event.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,10 +11,6 @@ import '../../../common/colors/colors.dart';
 import '../../../common/database/database_controller.dart';
 import '../../splash_screen/presentation/splash_screen.page.dart';
 import '../../widgets/custom_text/custom_text.dart';
-import '../historic/model/category.dart';
-import '../historic/model/category.entity.dart';
-import '../historic/domain/event.entity.dart';
-import '../historic/model/event.dart';
 
 class AddEventForm extends StatefulWidget {
   @override
@@ -270,7 +268,7 @@ class _AddEventFormState extends State<AddEventForm> {
                 children: [
                   CustomText(
                     color: CustomColors.primayRed,
-                    text: 'Escolha a categoria',
+                    text: 'Escolha o tipo da movimentação',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     textAlign: null,
@@ -286,7 +284,7 @@ class _AddEventFormState extends State<AddEventForm> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               _buildEventType('Receita'),
-                              _buildEventType('Débito')
+                              _buildEventType('Despesas')
                             ],
                           ),
                         ),
@@ -302,28 +300,38 @@ class _AddEventFormState extends State<AddEventForm> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CustomText(
-                    color: CustomColors.primayRed,
-                    text: 'Escolha a categoria',
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    textAlign: null,
-                  ),
+                  _typeSelected.isNotEmpty
+                      ? CustomText(
+                          color: CustomColors.primayRed,
+                          text: 'Escolha a categoria',
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          textAlign: null,
+                        )
+                      : Container(),
                   Container(
                     height: 40,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount:_typeSelected == "Receita"? category.getCreditCategories().length: category.getDebitCategories().length ,
+                      itemCount: _typeSelected == "Receita"
+                          ? category.getCreditCategories().length
+                          : category.getDebitCategories().length,
                       itemBuilder: (BuildContext context, int index) {
-                        return _typeSelected == "Receita"? Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: _buildEventCategory(
-                                category.getCreditCategories()[index]),
-                        ): Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
-                          child: _buildEventCategory(
-                                category.getDebitCategories()[index]),
-                        );
+                        return _typeSelected.isNotEmpty
+                            ? _typeSelected == "Receita"
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8),
+                                    child: _buildEventCategory(
+                                        category.getCreditCategories()[index]),
+                                  )
+                                : Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8),
+                                    child: _buildEventCategory(
+                                        category.getDebitCategories()[index]),
+                                  )
+                            : Container();
                         //       category.alimentacao);
                       },
                     ),
@@ -483,9 +491,15 @@ class _AddEventFormState extends State<AddEventForm> {
       'timeStamp': timeStamp.toString(),
     };
 
-    _ref.push().set(contact).then((value) {
-      Navigator.pop(context);
-    });
+    try{
+      _ref.push().set(contact).then((value) {
+        Navigator.pop(context);
+      });
+    }on Exception{
+      Navigator.pushNamed(context, 'error_on_save');
+    }
+
+
   }
 
   String? _validarNome(String? value) {

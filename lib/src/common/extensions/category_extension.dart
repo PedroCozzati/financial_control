@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 
   getColorByCategory(String category, String type) {
-    if (type == "Débito") {
+    if (type == "Despesas") {
       switch (category) {
         case "Aluguel":
           return Color(0xfe671429);
@@ -25,11 +25,13 @@ import 'package:flutter/material.dart';
     else {
       switch (category) {
         case "Aluguel":
-          return Color(0xfe3eab7b);
+          return Color(0xfe82f3c1);
         case "Outros":
-          return Color(0xfe92c377);
+          return Color(0xfe477132);
         case "Contas":
-          return Color(0xfe0d411f);
+          return Color(0xfe31a159);
+        case "Salário":
+          return Color(0xfe9cd21a);
       }
     }
   }

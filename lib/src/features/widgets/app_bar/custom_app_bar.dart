@@ -103,7 +103,7 @@ class _CustomAppBarState extends State {
                             color: Color(0xffffffff),
                             size: 25,
                           ),
-                          onPressed: () {},
+                          onPressed: () =>Navigator.pushNamed(context, 'faq'),
                         ),
                       ),
                     ),

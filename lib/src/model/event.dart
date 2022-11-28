@@ -1,5 +1,3 @@
-import 'package:financial_control/src/features/home/historic/model/category.dart';
-
 class EventEntity {
   String? key;
   EventData? eventData;

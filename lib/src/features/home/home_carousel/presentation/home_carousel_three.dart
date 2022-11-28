@@ -1,6 +1,8 @@
 import 'dart:math';
 
-import 'package:financial_control/src/features/home/historic/model/category.entity.dart';
+import 'package:financial_control/src/common/extensions/category_extension.dart';
+import 'package:financial_control/src/model/category.entity.dart';
+import 'package:financial_control/src/model/event.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -11,11 +13,8 @@ import 'package:intl/intl.dart';
 
 import '../../../../common/colors/colors.dart';
 import '../../../../common/database/database_controller.dart';
-import '../../../../common/extensions/string_extensions.dart';
 import '../../../splash_screen/presentation/splash_screen.page.dart';
 import '../../../widgets/custom_text/custom_text.dart';
-import '../../historic/model/category.dart';
-import '../../historic/model/event.dart';
 
 class PieChartWidget extends StatefulWidget {
   const PieChartWidget({Key? key}) : super(key: key);
@@ -34,11 +33,11 @@ class _PieChartWidgetState extends State<PieChartWidget> {
   List creditsList = [];
   List categoryCreditList = [];
   List categoryDebitList = [];
-  String _categorySelected = 'Débito';
+  String _categorySelected = 'Despesas';
   String categorias = "";
   final formatter =
       NumberFormat.simpleCurrency(locale: "pt_Br", decimalDigits: 2);
-  String _typeSelected = 'Débito';
+  String _typeSelected = 'Despesas';
   bool eventIsDebit = true;
   List sum = [];
 
@@ -56,7 +55,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
   }
 
   isDebit(EventEntity element) {
-    eventIsDebit = element.eventData!.type == "Débito";
+    eventIsDebit = element.eventData!.type == "Despesas";
     // return eventIsDebit;
   }
 
@@ -74,7 +73,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
   void test() {
     for (int i = 0; i < eventList.length; i++) {
       var test = eventList[i].eventData!.value!.replaceAll('.', '');
-      if (eventList[i].eventData!.type == "Débito") {
+      if (eventList[i].eventData!.type == "Despesas") {
         debitList.add(double.parse(test.replaceAll(",", ".")));
       } else {
         creditsList.add(double.parse(test.replaceAll(",", ".")));
@@ -154,9 +153,13 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _buildEventCategory("Débito"),
                         _buildEventCategory("Receita"),
+                        _buildEventCategory("Despesas"),
+
                       ],
+                    ),
+                    SizedBox(
+                      height: 20,
                     ),
                     Container(
                         height: 130,
@@ -185,8 +188,11 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                           // Optional
                           swapAnimationCurve: Curves.linear, //
                         )),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Container(
-                      height: MediaQuery.of(context).size.height / 4,
+                      height: MediaQuery.of(context).size.height / 3.3,
                       width: 450,
                       child: ListView(
                         children: eventList.where((element) {
@@ -204,7 +210,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                           double debitSum = debitList.fold(0, (p, c) => p + c);
                           double creditSum =
                               creditsList.fold(0, (p, c) => p + c);
-                          bool isDebit = _categorySelected == "Débito";
+                          bool isDebit = _categorySelected == "Despesas";
                           return SectorRow(category, debitList, debitSum,
                               creditSum, isDebit);
                         }).toList(),

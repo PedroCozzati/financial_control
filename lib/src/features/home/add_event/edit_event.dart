@@ -1,3 +1,5 @@
+import 'package:financial_control/src/model/category.entity.dart';
+import 'package:financial_control/src/model/event.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,13 +10,11 @@ import '../../../common/colors/colors.dart';
 import '../../../common/database/database_controller.dart';
 import '../../splash_screen/presentation/splash_screen.page.dart';
 import '../../widgets/custom_text/custom_text.dart';
-import '../historic/model/category.entity.dart';
-import '../historic/domain/event.entity.dart';
 
 class EditEventForm extends StatefulWidget {
-  final String contactKey;
+  final String? contactKey;
 
-  EditEventForm({required this.contactKey});
+  EditEventForm({this.contactKey});
 
   @override
   _EditEventFormState createState() => _EditEventFormState();
@@ -46,12 +46,14 @@ class _EditEventFormState extends State<EditEventForm> {
 
   late DatabaseReference _ref;
   late FormState formState;
+  bool isVisible = true;
   bool msgErrorIsVisible = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    msgErrorIsVisible = false;
     _valueController = MoneyMaskedTextController(
         decimalSeparator: ',', thousandSeparator: '.');
     _descriptionController = TextEditingController();
@@ -286,7 +288,7 @@ class _EditEventFormState extends State<EditEventForm> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               _buildEventType('Receita'),
-                              _buildEventType('Débito')
+                              _buildEventType('Despesas')
                             ],
                           ),
                         ),
@@ -302,84 +304,40 @@ class _EditEventFormState extends State<EditEventForm> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CustomText(
-                    color: CustomColors.primayRed,
-                    text: 'Escolha a categoria',
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    textAlign: null,
-                  ),
+                  _typeSelected.isNotEmpty
+                      ? CustomText(
+                          color: CustomColors.primayRed,
+                          text: 'Escolha a categoria',
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          textAlign: null,
+                        )
+                      : Container(),
                   Container(
                     height: 40,
-                    child: ListView(
+                    child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      children: [
-                        Visibility(
-                          visible: _typeSelected == "Receita",
-                          child: _buildEventCategory(
-                              category.outros.replaceAll('+', '')),
-                        ),
-                        Visibility(
-                          child: _buildEventCategory(
-                              category.alimentacao.replaceAll('-', '')),
-                          visible: _typeSelected != "Receita",
-                        ),
-                        SizedBox(width: 10),
-                        Visibility(
-                          visible: _typeSelected != "Receita",
-                          child: _buildEventCategory(
-                              category.lazer.replaceAll('-', '')),
-                        ),
-                        SizedBox(width: 10),
-                        Visibility(
-                          visible: _typeSelected != "Receita",
-                          child: _buildEventCategory(
-                              category.aluguel.replaceAll('-', '')),
-                        ),
-                        SizedBox(width: 10),
-                        Visibility(
-                          visible: _typeSelected != "Receita",
-                          child: _buildEventCategory(
-                              category.viagem.replaceAll('-', '')),
-                        ),
-                        SizedBox(width: 10),
-                        Visibility(
-                          visible: _typeSelected != "Receita",
-                          child: _buildEventCategory(
-                              category.compras.replaceAll('-', '')),
-                        ),
-                        SizedBox(width: 10),
-                        Visibility(
-                          visible: _typeSelected == "Receita",
-                          child: _buildEventCategory(
-                              category.aluguel.replaceAll('+', '')),
-                        ),
-                        SizedBox(width: 10),
-                        Visibility(
-                          visible: _typeSelected != "Receita",
-                          child: _buildEventCategory(
-                              category.saude.replaceAll('-', '')),
-                        ),
-                        SizedBox(width: 10),
-                        Visibility(
-                          visible: _typeSelected != "Receita",
-                          child: _buildEventCategory(
-                              category.contas.replaceAll('-', '')),
-                        ),
-                        SizedBox(width: 10),
-                        Visibility(
-                          visible: _typeSelected != "Receita",
-                          child: _buildEventCategory(
-                              category.outros.replaceAll('-', '')),
-                        ),
-                        SizedBox(width: 10),
-                        SizedBox(width: 10),
-                        Visibility(
-                          visible: _typeSelected == "Receita",
-                          child: _buildEventCategory(
-                              category.contas.replaceAll('+', '')),
-                        ),
-                      ],
+                      itemCount: _typeSelected == "Receita"
+                          ? category.getCreditCategories().length
+                          : category.getDebitCategories().length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return _typeSelected.isNotEmpty
+                            ? _typeSelected == "Receita"
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8),
+                                    child: _buildEventCategory(
+                                        category.getCreditCategories()[index]),
+                                  )
+                                : Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8),
+                                    child: _buildEventCategory(
+                                        category.getDebitCategories()[index]),
+                                  )
+                            : Container();
+                        //       category.alimentacao);
+                      },
                     ),
                   ),
                 ],
@@ -390,73 +348,70 @@ class _EditEventFormState extends State<EditEventForm> {
             ),
           ],
         ),
-        Column(
-          children: [
-            Visibility(
-              visible: msgErrorIsVisible,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color(0x42c7646c),
-                  border: Border.all(
-                    color: Colors.black54,
-                    width: 0.7
+        isVisible
+            ? Column(
+                children: [
+                  Visibility(
+                    visible: msgErrorIsVisible,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Color(0x42c7646c),
+                        border: Border.all(color: Colors.black54, width: 0.7),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(27.0),
+                        child: Text(
+                          "Dica: O formulário não pode ser salvo se o tipo e a categoria não estiverem selecionados",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 15),
+                        ),
+                      ),
+                    ),
                   ),
-                  borderRadius: BorderRadius.circular(20),
-
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(27.0),
-                  child: Text(
-                      "O formulário não pode ser salvo se o tipo e a receita não estiverem selecionados",style: TextStyle(
-                    fontWeight: FontWeight.bold,fontSize: 15
-                  ),),
-                ),
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 50),
-              child: FlatButton(
-                height: 50,
-                shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                        color: Colors.white,
-                        width: 1,
-                        style: BorderStyle.solid),
-                    borderRadius: BorderRadius.circular(50)),
-                child: Text(
-                  'Salvar',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 50),
+                    child: FlatButton(
+                      height: 50,
+                      shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                              color: Colors.white,
+                              width: 1,
+                              style: BorderStyle.solid),
+                          borderRadius: BorderRadius.circular(50)),
+                      child: Text(
+                        'Salvar',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      onPressed: () {
+                        // if(pickedDate!=null) {
+                        //
+                        // }
+                        if (_key.currentState!.validate()) {
+                          DateTime date = DateFormat('dd-MM-yyyy')
+                              .parse(_dateController.text);
+                          timeStamp = date.millisecondsSinceEpoch;
+                          if (_typeSelected != '' && _categorySelected != '') {
+                            isVisible = false;
+                            saveContact();
+                          }
+                          //msgErrorIsVisible = true;
+                          setState(() {
+                            msgErrorIsVisible = true;
+                          });
+                        }
+                      },
+                      color: CustomColors.primayRed,
+                    ),
                   ),
-                ),
-                onPressed: () {
-                  // if(pickedDate!=null) {
-                  //
-                  // }
-                  if (_key.currentState!.validate()) {
-                    DateTime date =
-                        DateFormat('dd-MM-yyyy').parse(_dateController.text);
-                    timeStamp = date.millisecondsSinceEpoch;
-
-                    if (_typeSelected != '' && _categorySelected != '') {
-                      saveContact();
-                    } else {
-                      msgErrorIsVisible=true;
-                      setState(() {
-                        msgErrorIsVisible=true;
-                      });
-                    }
-                  }
-                  msgErrorIsVisible=true;
-                },
-                color: CustomColors.primayRed,
-              ),
-            ),
-          ],
-        )
+                ],
+              )
+            : CircularProgressIndicator()
       ],
     );
   }
@@ -466,14 +421,20 @@ class _EditEventFormState extends State<EditEventForm> {
     String description = _descriptionController.text;
     String date = _dateController.text;
 
+    EventData event = EventData(
+        type: _typeSelected,
+        description: description,
+        date: date,
+        value: value,
+        category: _categorySelected);
 
     Map<String, String> contact = {
-      'value': ' ',
-      'description': ' ',
-      'type': ' ',
-      'category': ' ',
-      'date': 'event.date',
-      'timeStamp': ' ',
+      'value': event.value!,
+      'description': event.description!,
+      'type': event.type!,
+      'category': event.category!,
+      'date': event.date!,
+      'timeStamp': timeStamp.toString(),
     };
 
     _ref.child(widget.contactKey).update(contact).then((value) {

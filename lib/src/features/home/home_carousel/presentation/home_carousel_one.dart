@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:financial_control/src/common/database/database_controller.dart';
+import 'package:financial_control/src/model/event.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,6 @@ import 'package:lottie/lottie.dart';
 import '../../../../common/colors/colors.dart';
 import '../../../splash_screen/presentation/splash_screen.page.dart';
 import '../../../widgets/custom_text/custom_text.dart';
-import '../../historic/model/event.dart';
 
 class HomeCarouselOne extends StatefulWidget {
   const HomeCarouselOne({Key? key}) : super(key: key);
@@ -32,8 +32,9 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
       FirebaseDatabase.instance.reference().child(userId).child('events');
   List debitList = [];
   List creditsList = [];
-  List<int> monthPeriod = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-  List yearPeriod = [];
+  List<int> monthPeriod = [];
+  List<int> yearPeriod = [];
+  bool seeAllPeriod = false;
   final formatter =
       NumberFormat.simpleCurrency(locale: "pt_Br", decimalDigits: 2);
 
@@ -56,44 +57,29 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
     for (int i = 0; i < eventList.length; i++) {
       DateTime timer =
           DateFormat('dd-MM-yyyy').parse(eventList[i].eventData!.date);
-      // monthPeriod.add(timer.month);
+      monthPeriod.add(timer.month);
       yearPeriod.add(timer.year);
 
       var test = eventList[i].eventData!.value!.replaceAll('.', '');
-      if (eventList[i].eventData!.type == "Débito") {
-        if (timer.month == selectedValue)
+      if (eventList[i].eventData!.type == "Despesas") {
+        if (timer.month == selectedMonthValue &&
+            timer.year == selectedYearValue)
           debitList.add(double.parse(test.replaceAll(",", ".")));
 
-        // eventList
-        //
-        //     .where((element) => )
-        //     .forEach((element) {
-        //   print(element.eventData!);
-        //   if (element.eventData!.type == "Débito") {
-        //     debitList.add(double.parse(test.replaceAll(",", ".")));
-        //   }
-
       } else {
-        eventList
-            .where((element) => timer.month == selectedValue)
-            .forEach((element) {
-          if (element.eventData!.type != "Débito") {
-            if (timer.month == selectedValue){
-              creditsList.add(double.parse(test.replaceAll(",", ".")));
-            }
-
+        if (eventList[i].eventData!.type != "Despesas") {
+          if (timer.month == selectedMonthValue &&
+              timer.year == selectedYearValue) {
+            creditsList.add(double.parse(test.replaceAll(",", ".")));
           }
-        });
-
-        // var test4 = format.format();
-
-        //  var dateF = format.format();
+        }
 
       }
     }
   }
 
-  int selectedValue = DateTime.now().month;
+  int selectedMonthValue = DateTime.now().month;
+  int selectedYearValue = DateTime.now().year;
 
   @override
   void initState() {
@@ -272,38 +258,89 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            height: 40.0,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30.0),
-              color: Color(0x735B9B5B),
-            ),
-            child:
-// Step 2.
-                DropdownButton<int>(
-              // Step 3.
-              value: selectedValue,
-              // Step 4.
-              items: monthPeriod
-                  .toSet()
-                  .toList()
-                  .map<DropdownMenuItem<int>>((int value) {
-                return DropdownMenuItem<int>(
-                  value: value,
-                  child: Text(
-                    getMonthsByValue(value),
-                    style: TextStyle(fontSize: 20),
-                  ),
-                );
-              }).toList(),
-              // Step 5.
-              onChanged: (int? newValue) {
-                setState(() {
-                  selectedValue = newValue!;
-                });
-              },
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 30,
+                child: Text(
+                  'Período: ',
+                  style: TextStyle(fontSize: 23),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                height: 40.0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30.0),
+                  color: Color(0x415B9B5B),
+                ),
+                child: DropdownButton<int>(
+                  // Step 3.
+                  value: selectedMonthValue,
+                  // Step 4.
+                  items: monthPeriod
+                      .toSet()
+                      .toList()
+                      .map<DropdownMenuItem<int>>((int value) {
+                    return DropdownMenuItem<int>(
+                      value: value,
+                      child: Text(
+                        getMonthsByValue(value),
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    );
+                  }).toList(),
+                  // Step 5.
+                  onChanged: (int? newValue) {
+                    setState(() {
+                      selectedMonthValue = newValue!;
+                    });
+                  },
+                ),
+              ),
+              Container(
+                height: 40,
+                child: Text(
+                  '/',
+                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                height: 40.0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30.0),
+                  color: Color(0x415B9B5B),
+                ),
+                child: DropdownButton<int>(
+                  // Step 3.
+                  value: selectedYearValue,
+                  // Step 4.
+                  items: yearPeriod
+                      .toSet()
+                      .toList()
+                      .map<DropdownMenuItem<int>>((int value) {
+                    return DropdownMenuItem<int>(
+                      value: value,
+                      child: Text(
+                        value.toString(),
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    );
+                  }).toList(),
+                  // Step 5.
+                  onChanged: (int? newValue) {
+                    setState(() {
+                      selectedYearValue = newValue!;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 20,
           ),
           Container(
               decoration: BoxDecoration(
@@ -415,8 +452,9 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: CustomText(
-                            text:
-                                "Quando você registrar movimentações, as informações irão aparecer acima\n 💸",
+                            text: monthPeriod.isEmpty && yearPeriod.isEmpty
+                                ? "Você ainda não registrou nenhuma movimentação\n 💸"
+                                : "Você não registrou nenhuma movimentação nesse período\n 💸",
                             fontWeight: null,
                             fontSize: 18,
                             color: Colors.black,

@@ -1,8 +1,8 @@
 import 'package:financial_control/src/common/database/database_controller.dart';
+import 'package:financial_control/src/model/event.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 import '../../../splash_screen/presentation/splash_screen.page.dart';
-import '../model/event.dart';
 
 class EventController{
   List<EventEntity> eventList = [];

@@ -1,6 +1,6 @@
 import 'package:financial_control/src/common/colors/colors.dart';
 import 'package:financial_control/src/features/home/historic/controller/event_controller.dart';
-import 'package:financial_control/src/features/home/historic/domain/event.entity.dart';
+import 'package:financial_control/src/model/event.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
@@ -12,14 +12,13 @@ import '../../../splash_screen/presentation/splash_screen.page.dart';
 import '../../../widgets/custom_text/custom_text.dart';
 import '../../add_event/add_event.dart';
 import '../../add_event/edit_event.dart';
-import '../model/event.dart';
 
-class Contacts extends StatefulWidget {
+class HistoricEvents extends StatefulWidget {
   @override
-  _ContactsState createState() => _ContactsState();
+  _HistoricEventsState createState() => _HistoricEventsState();
 }
 
-class _ContactsState extends State<Contacts> {
+class _HistoricEventsState extends State<HistoricEvents> {
   late Query _ref;
   DatabaseReference reference =
       FirebaseDatabase.instance.reference().child(userId).child('events');
@@ -451,7 +450,7 @@ class _ContactsState extends State<Contacts> {
                   Align(
                       alignment: Alignment.topCenter,
                       child: FirebaseAnimatedList(
-                        duration: Duration(seconds: 1),
+                        duration: Duration(milliseconds: 600),
                         shrinkWrap: true,
                         reverse: true,
                         query: _ref,
