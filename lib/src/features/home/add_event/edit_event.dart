@@ -24,7 +24,7 @@ class _EditEventFormState extends State<EditEventForm> {
   int timeStamp = 0;
   GlobalKey<FormState> _key = new GlobalKey();
   bool _validate = false;
-  static const _locale = 'en';
+  static const _locale = 'pt_br';
   late String valor, email, celular;
   Categories category = Categories();
   DatabaseController databaseController = DatabaseController();
@@ -272,7 +272,7 @@ class _EditEventFormState extends State<EditEventForm> {
                 children: [
                   CustomText(
                     color: CustomColors.primayRed,
-                    text: 'Edite a categoria',
+                    text: 'Edite o tipo da movimentação',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     textAlign: null,
@@ -307,7 +307,7 @@ class _EditEventFormState extends State<EditEventForm> {
                   _typeSelected.isNotEmpty
                       ? CustomText(
                           color: CustomColors.primayRed,
-                          text: 'Escolha a categoria',
+                          text: 'Edite a categoria',
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           textAlign: null,

@@ -26,11 +26,15 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
   double debits = 0;
   double credits = 0;
   double debitsPercentage = 0;
+  double allDebits = 0;
+  double allCredits = 0;
   DatabaseController databaseController = DatabaseController();
   List eventList = [];
   DatabaseReference reference =
       FirebaseDatabase.instance.reference().child(userId).child('events');
   List debitList = [];
+  List allPeriodDebitList = [];
+  List allPeriodCreditList = [];
   List creditsList = [];
   List<int> monthPeriod = [];
   List<int> yearPeriod = [];
@@ -62,18 +66,18 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
 
       var test = eventList[i].eventData!.value!.replaceAll('.', '');
       if (eventList[i].eventData!.type == "Despesas") {
+        allPeriodDebitList.add(double.parse(test.replaceAll(",", ".")));
         if (timer.month == selectedMonthValue &&
             timer.year == selectedYearValue)
           debitList.add(double.parse(test.replaceAll(",", ".")));
-
       } else {
         if (eventList[i].eventData!.type != "Despesas") {
+          allPeriodCreditList.add(double.parse(test.replaceAll(",", ".")));
           if (timer.month == selectedMonthValue &&
               timer.year == selectedYearValue) {
             creditsList.add(double.parse(test.replaceAll(",", ".")));
           }
         }
-
       }
     }
   }
@@ -92,9 +96,13 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
     debitsPercentage = ((1 - (credits / (debits + credits))) * 100).abs();
     debitList.clear();
     creditsList.clear();
+    allPeriodDebitList.clear();
+    allPeriodCreditList.clear();
     test();
     debits = debitList.fold(0, (p, c) => p + c);
     credits = creditsList.fold(0, (p, c) => p + c);
+    allDebits = allPeriodDebitList.fold(0, (p, c) => p + c);
+    allCredits = allPeriodCreditList.fold(0, (p, c) => p + c);
     print(debits);
 
     // EventEntity test = eventList.map((e) => e);
@@ -121,9 +129,9 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
 
   Widget percentBar() {
     return Padding(
-      padding: const EdgeInsets.only(top: 40),
+      padding: const EdgeInsets.only(top: 12),
       child: Container(
-        height: 180,
+        height: 100,
         child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,7 +146,7 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
                                 .toStringAsFixed(2) +
                             " %"
                         : "0",
-                    style: TextStyle(fontSize: 22),
+                    style: TextStyle(fontSize: 18),
                   ),
                   //Text(),
                   Text(
@@ -148,7 +156,7 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
                                 .toStringAsFixed(2) +
                             " %"
                         : "0",
-                    style: TextStyle(fontSize: 22),
+                    style: TextStyle(fontSize: 18),
                   ),
                 ],
               ),
@@ -171,7 +179,7 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
                 ),
               ),
               SizedBox(
-                height: 30,
+                height: 10,
               ),
               subtitles(),
             ]),
@@ -185,36 +193,43 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Container(
-              height: 20,
-              width: 20,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: Colors.red.shade300),
+            Row(
+              children: [
+                Container(
+                  height: 20,
+                  width: 20,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      color: Colors.red.shade300),
+                ),
+                Text(
+                  '   Despesas',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ],
             ),
-            Text(
-              '   Despesas',
-              style: TextStyle(fontSize: 20),
-            )
+
+            Row(
+              children: [
+                Container(
+                  height: 20,
+                  width: 20,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      color: Colors.green.shade300),
+                ),
+                Text('   Receita', style: TextStyle(fontSize: 20))
+              ],
+            ),
           ],
         ),
         SizedBox(
           height: 5,
         ),
         //Text(),
-        Row(
-          children: [
-            Container(
-              height: 20,
-              width: 20,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: Colors.green.shade300),
-            ),
-            Text('   Receita', style: TextStyle(fontSize: 20))
-          ],
-        ),
+
       ],
     );
   }
@@ -254,151 +269,13 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
   Widget homeTexts() {
     print(monthPeriod.toSet().toList());
     return Container(
-      height: 200,
+      height: 320,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                height: 30,
-                child: Text(
-                  'Período: ',
-                  style: TextStyle(fontSize: 23),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                height: 40.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30.0),
-                  color: Color(0x415B9B5B),
-                ),
-                child: DropdownButton<int>(
-                  // Step 3.
-                  value: selectedMonthValue,
-                  // Step 4.
-                  items: monthPeriod
-                      .toSet()
-                      .toList()
-                      .map<DropdownMenuItem<int>>((int value) {
-                    return DropdownMenuItem<int>(
-                      value: value,
-                      child: Text(
-                        getMonthsByValue(value),
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    );
-                  }).toList(),
-                  // Step 5.
-                  onChanged: (int? newValue) {
-                    setState(() {
-                      selectedMonthValue = newValue!;
-                    });
-                  },
-                ),
-              ),
-              Container(
-                height: 40,
-                child: Text(
-                  '/',
-                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                height: 40.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30.0),
-                  color: Color(0x415B9B5B),
-                ),
-                child: DropdownButton<int>(
-                  // Step 3.
-                  value: selectedYearValue,
-                  // Step 4.
-                  items: yearPeriod
-                      .toSet()
-                      .toList()
-                      .map<DropdownMenuItem<int>>((int value) {
-                    return DropdownMenuItem<int>(
-                      value: value,
-                      child: Text(
-                        value.toString(),
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    );
-                  }).toList(),
-                  // Step 5.
-                  onChanged: (int? newValue) {
-                    setState(() {
-                      selectedYearValue = newValue!;
-                    });
-                  },
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 20,
-          ),
           Container(
               decoration: BoxDecoration(
-                  color: Colors.red.shade50,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.black54)),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomText(
-                      fontSize: 18,
-                      text: "Total de despesas:",
-                      color: Colors.black,
-                      fontWeight: null,
-                      textAlign: null,
-                    ),
-                    CustomText(
-                      fontSize: 18,
-                      text: "   ${formatter.format(debits)}",
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      textAlign: null,
-                    ),
-                  ],
-                ),
-              )),
-          Container(
-              decoration: BoxDecoration(
-                  color: Colors.green.shade50,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.black54)),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomText(
-                      fontSize: 18,
-                      text: "Total de receita:",
-                      color: Colors.black,
-                      fontWeight: null,
-                      textAlign: null,
-                    ),
-                    CustomText(
-                      fontSize: 18,
-                      text: "   ${formatter.format(credits)}",
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      textAlign: null,
-                    ),
-                  ],
-                ),
-              )),
-          Container(
-              decoration: BoxDecoration(
-                  color: credits - debits > 0.0
+                  color: allCredits - allDebits > 0.0
                       ? Colors.green.shade50
                       : Colors.red.shade50,
                   borderRadius: BorderRadius.circular(10),
@@ -410,20 +287,210 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
                     children: [
                       CustomText(
                         fontSize: 18,
-                        text: "Saldo:",
+                        text: "Saldo atual:",
                         color: Colors.black,
                         fontWeight: null,
                         textAlign: null,
                       ),
                       CustomText(
                         fontSize: 18,
-                        text: "   ${formatter.format(credits - debits)}",
+                        text: "   ${formatter.format(allCredits - allDebits)}",
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                         textAlign: null,
                       ),
                     ],
-                  )))
+                  ))),
+          SizedBox(height: 20,),
+          Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.black54)
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 30),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 30,
+                        child: Text(
+                          'Período: ',
+                          style: TextStyle(fontSize: 23),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        height: 40.0,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30.0),
+                          color: Color(0x415B9B5B),
+                        ),
+                        child: DropdownButton<int>(
+                          // Step 3.
+                          value: selectedMonthValue,
+                          // Step 4.
+                          items: monthPeriod
+                              .toSet()
+                              .toList()
+                              .map<DropdownMenuItem<int>>((int value) {
+                            return DropdownMenuItem<int>(
+                              value: value,
+                              child: Text(
+                                getMonthsByValue(value),
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            );
+                          }).toList(),
+                          // Step 5.
+                          onChanged: (int? newValue) {
+                            setState(() {
+                              selectedMonthValue = newValue!;
+                            });
+                          },
+                        ),
+                      ),
+                      Container(
+                        height: 40,
+                        child: Text(
+                          '/',
+                          style:
+                              TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        height: 40.0,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30.0),
+                          color: Color(0x415B9B5B),
+                        ),
+                        child: DropdownButton<int>(
+                          // Step 3.
+                          value: selectedYearValue,
+                          // Step 4.
+                          items: yearPeriod
+                              .toSet()
+                              .toList()
+                              .map<DropdownMenuItem<int>>((int value) {
+                            return DropdownMenuItem<int>(
+                              value: value,
+                              child: Text(
+                                value.toString(),
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            );
+                          }).toList(),
+                          // Step 5.
+                          onChanged: (int? newValue) {
+                            setState(() {
+                              selectedYearValue = newValue!;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                      decoration: BoxDecoration(
+                          color: Colors.red.shade50,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.black54)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CustomText(
+                              fontSize: 18,
+                              text: "Total de despesas:",
+                              color: Colors.black,
+                              fontWeight: null,
+                              textAlign: null,
+                            ),
+                            CustomText(
+                              fontSize: 18,
+                              text: "   ${formatter.format(debits)}",
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              textAlign: null,
+                            ),
+                          ],
+                        ),
+                      )),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                      decoration: BoxDecoration(
+                          color: Colors.green.shade50,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.black54)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CustomText(
+                              fontSize: 18,
+                              text: "Total de receita:",
+                              color: Colors.black,
+                              fontWeight: null,
+                              textAlign: null,
+                            ),
+                            CustomText(
+                              fontSize: 18,
+                              text: "   ${formatter.format(credits)}",
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              textAlign: null,
+                            ),
+                          ],
+                        ),
+                      )),
+                  SizedBox(
+                    height: 25,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: credits - debits > 0.0
+                            ? Colors.green.shade50
+                            : Colors.red.shade50,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.black54)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CustomText(
+                            fontSize: 18,
+                            text: "Saldo mensal:",
+                            color: Colors.black,
+                            fontWeight: null,
+                            textAlign: null,
+                          ),
+                          CustomText(
+                            fontSize: 18,
+                            text: "   ${formatter.format(credits - debits)}",
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            textAlign: null,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -434,7 +501,7 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
       child: Center(
         child: Container(
           padding: EdgeInsets.all(30),
-          height: 490,
+          height: 530,
           color: CustomColors.primaryWhite,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,

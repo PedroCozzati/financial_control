@@ -256,7 +256,7 @@ class _HistoricEventsState extends State<HistoricEvents> {
                           SizedBox(
                             width: 6,
                           ),
-                          Text('Edit',
+                          Text('Editar',
                               style: TextStyle(
                                   fontSize: 16,
                                   color: Color(0xff756922),
@@ -285,7 +285,7 @@ class _HistoricEventsState extends State<HistoricEvents> {
                         SizedBox(
                           width: 6,
                         ),
-                        Text('Delete',
+                        Text('Deletar',
                             style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.red[700],
@@ -464,25 +464,28 @@ class _HistoricEventsState extends State<HistoricEvents> {
                         },
                       ));
             } else {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    child: Text(
-                      "Parece que você ainda não tem nenhuma movimentação registrada\n\n\n\n\n\n\nClique no botão abaixo para adicionar movimentações",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 21),
+              return Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      child: Text(
+                        "Parece que você ainda não tem nenhuma movimentação registrada\n\n\n\n\n\n\nClique no botão abaixo para adicionar movimentações",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 21),
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Icon(
-                    Icons.arrow_downward,
-                    size: 59,
-                  )
-                ],
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Icon(
+                      Icons.arrow_downward,
+                      size: 59,
+                    )
+                  ],
+                ),
               );
             }
           },

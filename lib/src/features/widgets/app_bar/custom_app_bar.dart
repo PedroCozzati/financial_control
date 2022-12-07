@@ -73,7 +73,7 @@ class _CustomAppBarState extends State {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 40),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +99,7 @@ class _CustomAppBarState extends State {
                       child: Center(
                         child: IconButton(
                           icon: Icon(
-                            Icons.question_answer,
+                            Icons.question_mark,
                             color: Color(0xffffffff),
                             size: 25,
                           ),
@@ -110,17 +110,17 @@ class _CustomAppBarState extends State {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Text(
-                  "Deseja monitorar suas finanças ?" ,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                  ),
-                  textAlign: TextAlign.end,
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 30),
+              //   child: Text(
+              //     "Deseja monitorar suas finanças ?" ,
+              //     style: TextStyle(
+              //       color: Colors.black,
+              //       fontSize: 18,
+              //     ),
+              //     textAlign: TextAlign.end,
+              //   ),
+              // ),
             ],
           ),
         ),
