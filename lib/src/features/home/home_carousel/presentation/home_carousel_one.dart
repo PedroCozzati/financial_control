@@ -85,6 +85,10 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
   int selectedMonthValue = DateTime.now().month;
   int selectedYearValue = DateTime.now().year;
 
+  int currentYear = DateTime.now().year;
+  String currentPeriod = DateFormat("dd/MM/yyyy","pt_br").format(DateTime.now().toUtc()).toString();
+  String currentHour = DateFormat("hh:mm","pt_br").format(DateTime.now().toUtc()).toString();
+
   @override
   void initState() {
     retrieveStudentData();
@@ -269,10 +273,19 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
   Widget homeTexts() {
     print(monthPeriod.toSet().toList());
     return Container(
-      height: 455,
+      height: 470,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          CustomText(
+            fontSize: 14,
+            text: "Atualizado em: "+ currentPeriod + " ás " +currentHour,
+            color: Colors.black,
+            fontWeight: null,
+            textAlign: null,
+          ),
+          SizedBox(height: 4,),
+
           Container(
               decoration: BoxDecoration(
                   color: allCredits - allDebits > 0.0
@@ -301,6 +314,7 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
                       ),
                     ],
                   ))),
+
           SizedBox(height: 20,),
           Container(
             decoration: BoxDecoration(

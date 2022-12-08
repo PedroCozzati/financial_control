@@ -93,31 +93,18 @@ class _HistoricEventsState extends State<HistoricEvents> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(children: [
-                Icon(
-                  Icons.monetization_on_outlined,
-                  color: CustomColors.primayRed,
-                  size: 26,
-                ),
-                SizedBox(
-                  width: 6,
-                ),
-                Text(
-                  "R\$ " + event['value'],
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: CustomColors.primayRed,
-                      fontWeight: FontWeight.w600),
-                ),
-                SizedBox(width: 15),
-              ]),
-              Row(
-                children: [
+          Container(
+            height: 30,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(children: [
                   Icon(
-                    Icons.calendar_today,
+                    Icons.monetization_on_outlined,
                     color: CustomColors.primayRed,
                     size: 26,
                   ),
@@ -125,15 +112,37 @@ class _HistoricEventsState extends State<HistoricEvents> {
                     width: 6,
                   ),
                   Text(
-                    DateFormat('dd-MM-yyyy').format(dateTime),
+                    "R\$ " + event['value'],
                     style: TextStyle(
                         fontSize: 20,
                         color: CustomColors.primayRed,
                         fontWeight: FontWeight.w600),
                   ),
-                ],
-              )
-            ],
+                  SizedBox(width: 15),
+                ]),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.calendar_today,
+                      color: CustomColors.primayRed,
+                      size: 26,
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Text(
+                      DateFormat('dd-MM-yyyy').format(dateTime),
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: CustomColors.primayRed,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                )
+              ],
+            ),
+      ],
+    ),
           ),
           SizedBox(height: 10),
           Row(
@@ -341,7 +350,7 @@ class _HistoricEventsState extends State<HistoricEvents> {
             title: Text(
                 'Tem certeza que quer deletar a movimentação registrada no dia ${event['date']} ?'),
             content: Container(
-                height: 200,
+                height: 260,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
