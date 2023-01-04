@@ -86,11 +86,14 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
   int selectedYearValue = DateTime.now().year;
 
   int currentYear = DateTime.now().year;
-  String currentPeriod = DateFormat("dd/MM/yyyy","pt_br").format(DateTime.now().toUtc()).toString();
-  String currentHour = DateFormat("hh:mm","pt_br").format(DateTime.now().toUtc()).toString();
+  String currentPeriod = ' ';
+  String currentHour = ' ';
 
   @override
   void initState() {
+    initializeDateFormatting();
+    currentPeriod = DateFormat("dd/MM/yyyy","pt_br").format(DateTime.now()).toString();
+    currentHour = DateFormat("HH:mm","pt_br").format(DateTime.now()).toString();
     retrieveStudentData();
     super.initState();
   }

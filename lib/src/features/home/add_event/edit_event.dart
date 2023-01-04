@@ -204,7 +204,7 @@ class _EditEventFormState extends State<EditEventForm> {
             SizedBox(height: 15),
             TextFormField(
               maxLength: 22,
-              maxLines: 3,
+              maxLines: 1,
               controller: _descriptionController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
