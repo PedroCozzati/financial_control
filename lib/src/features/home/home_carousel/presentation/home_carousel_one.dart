@@ -85,8 +85,15 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
   int selectedMonthValue = DateTime.now().month;
   int selectedYearValue = DateTime.now().year;
 
+  int currentYear = DateTime.now().year;
+  String currentPeriod = ' ';
+  String currentHour = ' ';
+
   @override
   void initState() {
+    initializeDateFormatting();
+    currentPeriod = DateFormat("dd/MM/yyyy","pt_br").format(DateTime.now()).toString();
+    currentHour = DateFormat("HH:mm","pt_br").format(DateTime.now()).toString();
     retrieveStudentData();
     super.initState();
   }
@@ -206,7 +213,7 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
                 ),
                 Text(
                   '   Despesas',
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 18),
                 ),
               ],
             ),
@@ -220,7 +227,7 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
                       borderRadius: BorderRadius.circular(25),
                       color: Colors.green.shade300),
                 ),
-                Text('   Receita', style: TextStyle(fontSize: 20))
+                Text('   Receita', style: TextStyle(fontSize: 18))
               ],
             ),
           ],
@@ -269,10 +276,19 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
   Widget homeTexts() {
     print(monthPeriod.toSet().toList());
     return Container(
-      height: 320,
+      height: 470,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          CustomText(
+            fontSize: 14,
+            text: "Atualizado em: "+ currentPeriod + " ás " +currentHour,
+            color: Colors.black,
+            fontWeight: null,
+            textAlign: null,
+          ),
+          SizedBox(height: 4,),
+
           Container(
               decoration: BoxDecoration(
                   color: allCredits - allDebits > 0.0
@@ -301,6 +317,7 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
                       ),
                     ],
                   ))),
+
           SizedBox(height: 20,),
           Container(
             decoration: BoxDecoration(
@@ -487,6 +504,30 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 20,),
+                  credits + debits != 0
+                      ? percentBar()
+                      : Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Color(0x2b64c7b0),
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: CustomText(
+                          text: monthPeriod.isEmpty && yearPeriod.isEmpty
+                              ? "Você ainda não registrou nenhuma movimentação\n 💸"
+                              : "Você não registrou nenhuma movimentação nesse período\n 💸",
+                          fontWeight: null,
+                          fontSize: 18,
+                          color: Colors.black,
+                          textAlign: TextAlign.center,
+
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -508,28 +549,28 @@ class _HomeCarouselOneState extends State<HomeCarouselOne> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               homeTexts(),
-              credits + debits != 0
-                  ? percentBar()
-                  : Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Color(0x2b64c7b0),
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: CustomText(
-                            text: monthPeriod.isEmpty && yearPeriod.isEmpty
-                                ? "Você ainda não registrou nenhuma movimentação\n 💸"
-                                : "Você não registrou nenhuma movimentação nesse período\n 💸",
-                            fontWeight: null,
-                            fontSize: 18,
-                            color: Colors.black,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ),
+              // credits + debits != 0
+              //     ? percentBar()
+              //     : Center(
+              //         child: Container(
+              //           decoration: BoxDecoration(
+              //             color: Color(0x2b64c7b0),
+              //             borderRadius: BorderRadius.all(Radius.circular(20)),
+              //           ),
+              //           child: Padding(
+              //             padding: const EdgeInsets.all(20.0),
+              //             child: CustomText(
+              //               text: monthPeriod.isEmpty && yearPeriod.isEmpty
+              //                   ? "Você ainda não registrou nenhuma movimentação\n 💸"
+              //                   : "Você não registrou nenhuma movimentação nesse período\n 💸",
+              //               fontWeight: null,
+              //               fontSize: 18,
+              //               color: Colors.black,
+              //               textAlign: TextAlign.center,
+              //             ),
+              //           ),
+              //         ),
+              //       ),
 
               // Text(event['value']),
               // Text(event['description']),
